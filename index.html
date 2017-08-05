@@ -1,0 +1,139 @@
+<html>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- <script src="https://cdn.auth0.com/js/auth0/8.8/auth0.min.js"></script> -->
+
+    <link rel="style.css" type="text/css" href="style.css">
+    
+
+    <div id="app">
+        <h1>Janice</h1>
+        <form>
+            <input placeholder="Title"/>
+            <textarea placeholder="Body"></textarea>
+            <input placeholder="tags"/>
+            <input type="submit" value="Submit"/>
+        </form>
+
+        <button v-on:click="get_images">Insert Cover/Hero Photo</button>
+
+        <div v-for="photo in twitch" v-if="photo != null">
+            <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+        </div>
+        <p>provided by unsplash.com</p>
+
+        <button v-on:click="oauth">login</button>
+
+
+    </div>
+
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                twitch: []
+            },
+            methods:{
+                get_images:function(){
+                    const vue = this
+                    var url = 'https://api.unsplash.com/photos/random?count=5&query=computer&client_id=7549a368d3a30920c5312c24a4c62b892bc9c5bbe96d55f4b9aaf36671158b3e';
+                    axios.get(url)
+                        .then(function(response){
+                            vue.twitch = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                },
+                selectImg:function(img_url){
+                    console.log('You selected img_url:', img_url);
+                },
+                oauth:function(){
+                    //response_type=token for client, =code for server.
+                    window.location.href = 'https://public-api.wordpress.com/oauth2/authorize?response_type=token&client_id=45998&state=81271fba7799d16e42a0bafbc008ab62&redirect_uri=http://localhost:8000'
+                },
+                oauth_client_side:function(access_token, expires_in){
+                    //token last two weeks
+                    //test post
+                    axios({
+                        method: 'post',
+                        url: 'https://public-api.wordpress.com/rest/v1.2/sites/108370734/posts/new/',
+                        data: {
+                            title:'hello2',
+                            content:'this is 2 helo',
+                            tags:'tests',
+                            categories:'API',
+                            status:'draft'
+                        },
+                        headers: {
+                            // 'content-type': 'application/json',
+                            'Authorization': 'BEARER ' + access_token
+                        }
+                    })
+                    .then(function(response) {
+                        console.log('token?', response);
+                    })
+                    .catch(function(error){
+                        console.log('error:', error);
+                    });
+                },
+                // oauth_token_server_side:function(state, code){
+                //     /*
+                //     This is only to be used for server side code.
+                //     */
+                //     var payload = {
+                //         'client_id':'45998',
+                //         'redirect_uri':'http://localhost:8000',
+                //         'client_secret':'Z9wnBuKVZMS9yXKCvn31SrljBOxmi9p1tfGGPSoODcviyYRd2cltuBIDjm5NCxfq',
+                //         'code':code,
+                //         'grant_type':'authorization_code'
+                //     }
+                //     // Send a POST request
+                //     axios({
+                //       method: 'post',
+                //       url: 'https://public-api.wordpress.com/oauth2/token',
+                //       data: payload,
+                //       headers: {'content-type': 'application/javascript'}
+                //     })
+                //     .then(function(response) {
+                //         console.log('token?', response);
+                //     })
+                //     .catch(function(error){
+                //         console.log('error:', error);
+                //     });
+
+                // },
+                check_url:function(){
+                    // if(window.location.href.indexOf("code") > -1 && window.location.href.indexOf("state") > -1) {
+                    //     var info = window.location.href.split('/?')[1];
+                    //     code = info.substring(info.indexOf('code')+5,info.indexOf('&'))
+                    //     state = info.substring(info.indexOf('code')+5,)
+                    //     state = state.substring(state.indexOf('state')+6,)
+                    //     console.log('state:', state, code)
+                    //     this.oauth_token_server_side(state, code);
+                    // }
+                    // else 
+                    if(window.location.href.indexOf("access_token") > -1 && window.location.href.indexOf("expires_in") > -1) {
+                        var info = window.location.href;
+                        access_token = info.substring(info.indexOf('access_token')+13,info.indexOf('&'))
+                        expires_in = info.substring(info.indexOf('access_token')+13,)
+                        expires_in = expires_in.substring(expires_in.indexOf('expires_in')+11,)
+                        expires_in = expires_in.substring(0,expires_in.indexOf('&'))
+                        console.log('access_token:', access_token, expires_in);
+                        this.oauth_client_side(decodeURIComponent(access_token), expires_in);
+
+                    }
+                }
+            },
+            // created: function(){}
+        })
+        app.check_url();
+
+    </script>
+
+</html>
+

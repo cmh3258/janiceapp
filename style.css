@@ -1,0 +1,13 @@
+
+h1{
+    color: green;
+}
+
+.unsplash-photo-container{
+    width: 25em;
+    margin: 1em;
+    cursor: pointer;
+}
+.unsplash-photo-container:hover{
+    border:5px solid blue;
+}
