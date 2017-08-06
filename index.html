@@ -9,6 +9,11 @@
 
     <div id="app">
         <h1>Janice</h1>
+
+        <h3>Select blog to write on. (insert dropdown/select)</h3>
+        <button v-on:click="get_users_sites">Get Sites</button>
+
+
         <form id="blog-form" v-on:submit.prevent="submit_post">
             <input placeholder="Title" type="text" v-model="postForm.title"/>
             <textarea placeholder="Body" type="text" v-model="postForm.body"></textarea>
@@ -16,6 +21,7 @@
             <input type="submit" value="Submit"/>
             <!-- <button v-on:click="submit_post">Submit</button> -->
         </form>
+        {{postForm}}
 
         <button v-on:click="get_images">Insert Cover/Hero Photo</button>
 
@@ -37,7 +43,7 @@
             data: {
                 twitch: [],
                 notLoggedIn: true,
-                postForm:{}
+                postForm:{title:'', body:'', tags:''}
             },
             methods:{
                 get_images:function(){
@@ -59,6 +65,41 @@
                     const vue = this
                     console.log('submit_post: start of method:', vue.postForm);
                 },
+                upload_image_to_wp: function(){
+                    // curl \
+                    //  -H 'authorization: Bearer YOUR_API_TOKEN' \
+                    //  --data-urlencode 'media_urls=https://s.w.org/about/images/logos/codeispoetry-rgb.png' \
+                    //  'https://public-api.wordpress.com/rest/v1.1/sites/82974409/media/new'
+
+                    var url = 'https://public-api.wordpress.com/rest/v1.1/sites/82974409/media/new'
+                    url += '?media_urls=' + image_url
+                    axios({
+                        method: 'get',
+                        url: url,
+                        headers: {
+                            'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
+                        }
+                    })
+
+                },
+                get_users_sites(){
+                    var ac = window.localStorage.getItem("access_token");
+                    console.log('ac:', ac);
+                    var url = 'https://public-api.wordpress.com/rest/v1.1/me/sites'
+                    axios({
+                        method: 'get',
+                        url: url,
+                        headers: {
+                            'Authorization': 'BEARER ' + decodeURIComponent(window.localStorage.getItem("access_token"))
+                        }
+                    })
+                    .then(function(response){
+                        console.log('get_users_sites, response:', response)
+                    })
+                    .catch(function(error){
+
+                    })
+                },
                 oauth:function(){
                     //response_type=token for client, =code for server.
                     window.location.href = 'https://public-api.wordpress.com/oauth2/authorize?response_type=token&client_id=45998&state=81271fba7799d16e42a0bafbc008ab62&redirect_uri=http://localhost:8000'
@@ -68,13 +109,14 @@
                     //test post
                     axios({
                         method: 'post',
-                        url: 'https://public-api.wordpress.com/rest/v1.2/sites/108370734/posts/new/',
+                        url: 'https://public-api.wordpress.com/rest/v1.1/sites/108370734/posts/new/',
                         data: {
                             title:'hello2',
                             content:'this is 2 helo',
                             tags:'tests',
                             categories:'API',
-                            status:'draft'
+                            status:'draft',
+                            featured_image:null //exisiting attatchment id
                         },
                         headers: {
                             // 'content-type': 'application/json',
@@ -140,10 +182,12 @@
                         expires_in = expires_in.substring(0,expires_in.indexOf('&'))
                         // console.log('access_token:', access_token, expires_in);
 
+                        access_token = decodeURIComponent(access_token)
+
                         myStorage.setItem('access_token', access_token);
                         myStorage.setItem('expires_in', expires_in);
 
-                        // this.oauth_client_side(decodeURIComponent(access_token), expires_in);
+                        // this.oauth_client_side(access_token, expires_in);
 
                     }
                 }
