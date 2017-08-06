@@ -1,6 +1,6 @@
 
 h1{
-    color: green;
+    color: blue;
 }
 
 .unsplash-photo-container{
@@ -10,4 +10,19 @@ h1{
 }
 .unsplash-photo-container:hover{
     border:5px solid blue;
+}
+
+#blog-form{
+	width: 18em;
+}
+#blog-form input,
+#blog-form textarea{
+	display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 2px;
+}
+
+#blog-form textarea{
+	resize:vertical;
 }

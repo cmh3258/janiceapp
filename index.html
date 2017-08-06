@@ -3,18 +3,18 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <!-- <script src="https://cdn.auth0.com/js/auth0/8.8/auth0.min.js"></script> -->
 
-    <link rel="style.css" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
     
 
     <div id="app">
         <h1>Janice</h1>
-        <form>
-            <input placeholder="Title"/>
-            <textarea placeholder="Body"></textarea>
-            <input placeholder="tags"/>
+        <form id="blog-form" v-on:submit.prevent="submit_post">
+            <input placeholder="Title" type="text" v-model="postForm.title"/>
+            <textarea placeholder="Body" type="text" v-model="postForm.body"></textarea>
+            <input placeholder="tags" type="text" v-model="postForm.tags"/>
             <input type="submit" value="Submit"/>
+            <!-- <button v-on:click="submit_post">Submit</button> -->
         </form>
 
         <button v-on:click="get_images">Insert Cover/Hero Photo</button>
@@ -24,7 +24,8 @@
         </div>
         <p>provided by unsplash.com</p>
 
-        <button v-on:click="oauth">login</button>
+        <button v-on:click="oauth" v-if="notLoggedIn">login</button>
+        <p v-if="!notLoggedIn">You are logged in.</p>
 
 
     </div>
@@ -34,7 +35,9 @@
         var app = new Vue({
             el: '#app',
             data: {
-                twitch: []
+                twitch: [],
+                notLoggedIn: true,
+                postForm:{}
             },
             methods:{
                 get_images:function(){
@@ -51,6 +54,10 @@
                 },
                 selectImg:function(img_url){
                     console.log('You selected img_url:', img_url);
+                },
+                submit_post: function(){
+                    const vue = this
+                    console.log('submit_post: start of method:', vue.postForm);
                 },
                 oauth:function(){
                     //response_type=token for client, =code for server.
@@ -117,14 +124,26 @@
                     //     this.oauth_token_server_side(state, code);
                     // }
                     // else 
-                    if(window.location.href.indexOf("access_token") > -1 && window.location.href.indexOf("expires_in") > -1) {
+                    var myStorage = window.localStorage;
+
+                    if(myStorage.getItem("access_token") !== null){
+                        console.log('you have a access token.');
+                        const vue = this;
+                        vue.notLoggedIn = false;
+
+                    }
+                    else if(window.location.href.indexOf("access_token") > -1 && window.location.href.indexOf("expires_in") > -1) {
                         var info = window.location.href;
                         access_token = info.substring(info.indexOf('access_token')+13,info.indexOf('&'))
                         expires_in = info.substring(info.indexOf('access_token')+13,)
                         expires_in = expires_in.substring(expires_in.indexOf('expires_in')+11,)
                         expires_in = expires_in.substring(0,expires_in.indexOf('&'))
-                        console.log('access_token:', access_token, expires_in);
-                        this.oauth_client_side(decodeURIComponent(access_token), expires_in);
+                        // console.log('access_token:', access_token, expires_in);
+
+                        myStorage.setItem('access_token', access_token);
+                        myStorage.setItem('expires_in', expires_in);
+
+                        // this.oauth_client_side(decodeURIComponent(access_token), expires_in);
 
                     }
                 }
