@@ -30,7 +30,7 @@
         </div>
         <p>provided by unsplash.com</p>
 
-        <button v-on:click="oauth" v-if="notLoggedIn">login</button>
+        <button v-on:click="oauth">login</button>
         <p v-if="!notLoggedIn">You are logged in.</p>
 
 
@@ -90,7 +90,7 @@
                         method: 'get',
                         url: url,
                         headers: {
-                            'Authorization': 'BEARER ' + decodeURIComponent(window.localStorage.getItem("access_token"))
+                            'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
                         }
                     })
                     .then(function(response){
@@ -102,7 +102,7 @@
                 },
                 oauth:function(){
                     //response_type=token for client, =code for server.
-                    window.location.href = 'https://public-api.wordpress.com/oauth2/authorize?response_type=token&client_id=45998&state=81271fba7799d16e42a0bafbc008ab62&redirect_uri=http://localhost:8000'
+                    window.location.href = 'https://public-api.wordpress.com/oauth2/authorize?response_type=token&client_id=45998&state=81271fba7799d16e42a0bafbc008ab62&redirect_uri=http://localhost:8000&scope=global'
                 },
                 oauth_client_side:function(access_token, expires_in){
                     //token last two weeks
@@ -184,6 +184,7 @@
 
                         access_token = decodeURIComponent(access_token)
 
+                        console.log('settokeN:', access_token);
                         myStorage.setItem('access_token', access_token);
                         myStorage.setItem('expires_in', expires_in);
 
