@@ -31,8 +31,10 @@
         <p>provided by unsplash.com</p>
 
         <button v-on:click="oauth">login</button>
-        <p v-if="!notLoggedIn">You are logged in.</p>
+        <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
+        <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
 
+        <button v-on:click="mediumAuth">Medium Log In</button>
 
     </div>
 
@@ -42,10 +44,25 @@
             el: '#app',
             data: {
                 twitch: [],
-                notLoggedIn: true,
+                notLoggedIntoWordpress: true,
+                notLoggedIntoMedium: true,
                 postForm:{title:'', body:'', tags:''}
             },
             methods:{
+                mediumAuth:function(){
+                    window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=http://localhost:8000/";
+                },
+                mediumLongLivedToken(){
+                    // POST /v1/tokens HTTP/1.1
+                    // Host: api.medium.com
+                    // Content-Type: application/x-www-form-urlencoded
+                    // Accept: application/json
+                    // Accept-Charset: utf-8
+
+                    
+
+                    
+                },
                 get_images:function(){
                     const vue = this
                     var url = 'https://api.unsplash.com/photos/random?count=5&query=computer&client_id=7549a368d3a30920c5312c24a4c62b892bc9c5bbe96d55f4b9aaf36671158b3e';
@@ -168,11 +185,11 @@
                     // else 
                     var myStorage = window.localStorage;
 
+                    //check for Wordpress token
                     if(myStorage.getItem("access_token") !== null){
                         console.log('you have a access token.');
                         const vue = this;
-                        vue.notLoggedIn = false;
-
+                        vue.notLoggedIntoWordpress = false;
                     }
                     else if(window.location.href.indexOf("access_token") > -1 && window.location.href.indexOf("expires_in") > -1) {
                         var info = window.location.href;
@@ -189,6 +206,41 @@
                         myStorage.setItem('expires_in', expires_in);
 
                         // this.oauth_client_side(access_token, expires_in);
+                    }
+                    
+                    //check for Medium token
+                    if(myStorage.getItem("medium_token") !== null){
+                        console.log('you have a medium_token.');
+                        const vue = this;
+                        vue.notLoggedIntoMedium = false;
+                    }
+                    else if(window.location.href.indexOf('code=') > -1 && window.location.href.indexOf('state=') > -1){
+                        var info = window.location.href;
+                        code = info.substring(info.indexOf('code=')+5,)
+
+                        //now make api call to set the long period auth
+                        var url = "https://api.medium.com//v1/tokens?code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
+
+                        axios({
+                            method: 'post',
+                            url: url,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                                "Accept": "application/json",
+                                "Accept-Charset": "utf-8"
+                            }
+                        })
+                        .then(function(response) {
+                            console.log('medium token?', response);
+                            
+                            //now set the token to localstorage
+                            // myStorage.setItem('medium_token', medium_token);
+
+                        })
+                        .catch(function(error){
+                            console.log('medium token, error:', error);
+                        });
+
 
                     }
                 }
