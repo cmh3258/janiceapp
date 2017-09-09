@@ -26,3 +26,43 @@ h1{
 #blog-form textarea{
 	resize:vertical;
 }
+
+.content-left{
+    width: 25%;
+    display: inline-block;
+    float: left;
+}
+.content-right{
+    width: 70%;
+    display: inline-block;
+}
+.contain-writer{
+    width: 95%;
+    margin: 0 auto;
+    padding:2em;
+}
+#editor{
+    /*border: 2px solid black;*/
+    margin-top:3em;
+    padding:3em;
+    box-shadow: 2px 1px 17px -4px rgba(0, 0, 0, 0.2);
+}
+#editor:focus{
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.toolbar{
+    padding:10px;
+    border: 2px solid #ececec;
+    border-radius: 12px;
+    width: 25em;
+}
+.toolbar a{
+    font-size: 22px;
+    color: #ececec;
+    padding: 10px;
+}
+.toolbar a:hover{
+    color: #212121;
+}

@@ -3,40 +3,112 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
 
     <link rel="stylesheet" type="text/css" href="style.css"/>
-    
+
 
     <div id="app">
-        <h1>Janice</h1>
 
-        <h3>Select blog to write on. (insert dropdown/select)</h3>
-        <button v-on:click="get_users_sites">Get Sites</button>
+        <div class="content-left">
+            <h1>Janice</h1>
+
+            <h3>Select blog to write on. (insert dropdown/select)</h3>
+            <button v-on:click="get_users_sites">Get Sites</button>
 
 
-        <form id="blog-form" v-on:submit.prevent="submit_post">
-            <input placeholder="Title" type="text" v-model="postForm.title"/>
-            <textarea placeholder="Body" type="text" v-model="postForm.body"></textarea>
-            <input placeholder="tags" type="text" v-model="postForm.tags"/>
-            <input type="submit" value="Submit"/>
-            <!-- <button v-on:click="submit_post">Submit</button> -->
-        </form>
-        {{postForm}}
+            <form id="blog-form" v-on:submit.prevent="submit_post">
+                <input placeholder="Title" type="text" v-model="postForm.title"/>
+                <textarea placeholder="Body" type="text" v-model="postForm.body"></textarea>
+                <input placeholder="tags" type="text" v-model="postForm.tags"/>
+                <input type="submit" value="Submit"/>
+                <!-- <button v-on:click="submit_post">Submit</button> -->
+            </form>
+            {{postForm}}
 
-        <button v-on:click="get_images">Insert Cover/Hero Photo</button>
+            <button v-on:click="get_images">Insert Cover/Hero Photo</button>
 
-        <div v-for="photo in twitch" v-if="photo != null">
-            <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+            <div v-for="photo in twitch" v-if="photo != null">
+                <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+            </div>
+            <p>provided by unsplash.com</p>
+
+            <button v-on:click="oauth">login</button>
+            <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
+            <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
+
+            <button v-on:click="mediumAuth">Medium Log In</button>
         </div>
-        <p>provided by unsplash.com</p>
-
-        <button v-on:click="oauth">login</button>
-        <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
-        <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
-
-        <button v-on:click="mediumAuth">Medium Log In</button>
 
     </div>
+
+
+        <div class="content-right">
+            <div class="contain-writer">
+
+            <div class="toolbar">
+                <!-- <a href="#" data-command='undo'><i class='fa fa-undo'></i></a> -->
+                <!-- <a href="#" data-command='redo'><i class='fa fa-repeat'></i></a> -->
+                <!-- <div class="fore-wrapper"><i class='fa fa-font' style='color:#C96;'></i>
+                    <div class="fore-palette">
+                    </div>
+                </div>
+                <div class="back-wrapper"><i class='fa fa-font' style='background:#C96;'></i>
+                <div class="back-palette">
+                </div> -->
+                <!-- </div> -->
+                <a href="#" data-command='bold'><i class='fa fa-bold'></i></a>
+                <a href="#" data-command='italic'><i class='fa fa-italic'></i></a>
+                <a href="#" data-command='underline'><i class='fa fa-underline'></i></a>
+                <!-- <a href="#" data-command='strikeThrough'><i class='fa fa-strikethrough'></i></a> -->
+                <!-- <a href="#" data-command='justifyLeft'><i class='fa fa-align-left'></i></a>
+                <a href="#" data-command='justifyCenter'><i class='fa fa-align-center'></i></a>
+                <a href="#" data-command='justifyRight'><i class='fa fa-align-right'></i></a>
+                <a href="#" data-command='justifyFull'><i class='fa fa-align-justify'></i></a> -->
+                <!-- <a href="#" data-command='indent'><i class='fa fa-indent'></i></a>
+                <a href="#" data-command='outdent'><i class='fa fa-outdent'></i></a> -->
+                <a href="#" data-command='insertUnorderedList'><i class='fa fa-list-ul'></i></a>
+                <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
+                <a href="#" data-command='h1'>H1</a>
+                <a href="#" data-command='h2'>H2</a>
+                <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
+                <!-- <a href="#" data-command='unlink'><i class='fa fa-unlink'></i></a> -->
+                <!-- <a href="#" data-command='insertimage'><i class='fa fa-image'></i></a> -->
+                <a href="#" data-command='p'>P</a>
+                <!-- <a href="#" data-command='subscript'><i class='fa fa-subscript'></i></a>
+                <a href="#" data-command='superscript'><i class='fa fa-superscript'></i></a> -->
+                </div>
+
+                <div id='editor' contenteditable>
+                  <h1>A WYSIWYG Editor.</h1>
+                  <p>Try making some changes here. Add your own text or maybe an image.</p>
+                </div>
+            </div>
+        </div>
+
+
+    <script type="text/javascript">
+
+        var toolbar_a = document.getElementsByClassName('toolbar')[0].getElementsByTagName('a')
+        for (var i = 0; i < toolbar_a.length; i++) {
+            toolbar_a[i].onclick = function(){ elementChange(this) };
+        }
+
+        function elementChange(elem){
+            console.log('elem:', elem);
+            var command = elem.getAttribute('data-command');
+            if (command == 'h1' || command == 'h2' || command == 'p') {
+                document.execCommand('formatBlock', false, command);
+            }
+            else if (command == 'createlink' || command == 'insertimage') {
+                url = prompt('Enter the link here: ', 'http:\/\/');
+                document.execCommand(command, false, url);
+            } 
+            else {
+                document.execCommand(command, false, null)
+            };
+        }
+    </script>
 
 
     <script type="text/javascript">
