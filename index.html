@@ -1,11 +1,16 @@
 <html>
 
+    <!-- Vue Scripts -->
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
-
+    <!-- Style -->
     <link rel="stylesheet" type="text/css" href="style.css"/>
+
+    <!-- Fonts -->
+    <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Overpass+Mono:300,400,600,700" rel="stylesheet">
+
 
 
     <div id="app">
@@ -13,31 +18,40 @@
         <div class="content-left">
             <h1>Janice</h1>
 
+            <hr>
+
+            <!-- Need to finish this -->
             <h3>Select blog to write on. (insert dropdown/select)</h3>
             <button v-on:click="get_users_sites">Get Sites</button>
 
+            <hr>
 
             <form id="blog-form" v-on:submit.prevent="submit_post">
-                <input placeholder="Title" type="text" v-model="postForm.title"/>
-                <textarea placeholder="Body" type="text" v-model="postForm.body"></textarea>
                 <input placeholder="tags" type="text" v-model="postForm.tags"/>
                 <input type="submit" value="Submit"/>
-                <!-- <button v-on:click="submit_post">Submit</button> -->
             </form>
-            {{postForm}}
+            <!-- {{postForm}} -->
 
-            <button v-on:click="get_images">Insert Cover/Hero Photo</button>
+            <hr>
 
-            <div v-for="photo in twitch" v-if="photo != null">
-                <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+            <!-- Hero Img functionality -->
+            <div class="hero-img-container">
+                <button v-on:click="get_images">Insert Cover/Hero Photo</button>
+                <div v-for="photo in twitch" v-if="photo != null">
+                    <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+                </div>
+                <p>provided by unsplash.com</p>
             </div>
-            <p>provided by unsplash.com</p>
 
-            <button v-on:click="oauth">login</button>
-            <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
-            <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
+            <hr>
 
-            <button v-on:click="mediumAuth">Medium Log In</button>
+            <!-- User Login Functionality -->
+            <div class="user_login_dash">
+                <button v-on:click="oauth">login</button>
+                <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
+                <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
+                <button v-on:click="mediumAuth">Medium Log In</button>
+            </div>
         </div>
 
     </div>
@@ -71,17 +85,18 @@
                 <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
                 <a href="#" data-command='h1'>H1</a>
                 <a href="#" data-command='h2'>H2</a>
-                <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
                 <!-- <a href="#" data-command='unlink'><i class='fa fa-unlink'></i></a> -->
                 <!-- <a href="#" data-command='insertimage'><i class='fa fa-image'></i></a> -->
                 <a href="#" data-command='p'>P</a>
+                <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
+
                 <!-- <a href="#" data-command='subscript'><i class='fa fa-subscript'></i></a>
                 <a href="#" data-command='superscript'><i class='fa fa-superscript'></i></a> -->
                 </div>
 
                 <div id='editor' contenteditable>
-                  <h1>A WYSIWYG Editor.</h1>
-                  <p>Try making some changes here. Add your own text or maybe an image.</p>
+                  <h1>Title</h1>
+                  <p>You heart...</p>
                 </div>
             </div>
         </div>

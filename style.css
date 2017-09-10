@@ -52,6 +52,32 @@ h1{
     outline: none !important;
 }
 
+#editor p{
+    font-family: Overpass Mono;
+    color:rgba(0,0,0,.8);
+    font-size: 21px;
+    line-height: 1.58;
+    letter-spacing: -.003em;
+}
+#editor h1,
+#editor h2{
+    font-family: Asap;
+    color:rgba(0,0,0,.8);
+    
+}
+
+#editor h1{
+    font-size: 40px;
+    line-height: 1.04;
+    letter-spacing: 1.1px;
+}
+
+#editor h2{
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
 .toolbar{
     padding:10px;
     border: 2px solid #ececec;
