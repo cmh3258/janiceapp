@@ -3,6 +3,12 @@ h1{
     color: blue;
 }
 
+h1,h2,h3,h4,h5,h6,p,li,a,button{
+    font-family: Roboto Slab;
+    letter-spacing: .5px;
+    color: #3a3a3a;
+}
+
 .unsplash-photo-container{
     width: 25em;
     margin: 1em;
@@ -92,3 +98,28 @@ h1{
 .toolbar a:hover{
     color: #212121;
 }
+
+h4{
+    margin-bottom: 5px;
+}
+h5{
+    margin-bottom: 9px;
+}
+.control-panel{
+    background: #eff4f7;
+    background: #eff4f7;
+    padding: 1em 1.2em;
+    margin-bottom: 5px;
+}
+.control-panel h4{
+    font-weight: 500;
+}
+.control-panel h5{
+    font-weight: 500;
+}
+
+#wordpress-control-center{
+    
+}
+
+

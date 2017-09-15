@@ -10,6 +10,8 @@
     <!-- Fonts -->
     <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Overpass+Mono:300,400,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet">
 
 
 
@@ -18,13 +20,35 @@
         <div class="content-left">
             <h1>Janice</h1>
 
-            <hr>
+            <div v-if="user_info">
+                <img v-bind:src="user_info.profile_img" alt="profile"/>
+                <h3>Hello {{user_info.name}}</h3>
+            </div>
 
-            <!-- Need to finish this -->
-            <h3>Select blog to write on. (insert dropdown/select)</h3>
-            <button v-on:click="get_users_sites">Get Sites</button>
+            <div id="wordpress-control-center" class="control-panel">
+                <h4>Wordpress Status : 
+                    <span v-if="!notLoggedIntoWordpress">Logged In.</span>
+                    <span v-if="notLoggedIntoWordpress">Not Logged In.</span>
+                </h4>
+                <button v-if="notLoggedIntoWordpress" v-on:click="oauth">Log In</button>
 
-            <hr>
+                <div v-if="!notLoggedIntoWordpress">
+                    <h5>Select blog to write on.</h5>
+                    <button v-if="!wp_sites" v-on:click="get_users_sites">Get Sites</button>
+                    <select v-if="wp_sites">
+                        <option v-for="wp_site in wp_sites" :value="wp_site">{{wp_site.url}} </option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="medium-control-center" class="control-panel">
+                <h4>Medium Status : 
+                    <span v-if="!notLoggedIntoMedium">Logged In.</span>
+                    <span v-if="notLoggedIntoMedium">Not Logged In.</span>
+                </h4>
+                <button v-on:click="mediumAuth">Log In</button>
+            </div>
+
 
             <form id="blog-form" v-on:submit.prevent="submit_post">
                 <input placeholder="tags" type="text" v-model="postForm.tags"/>
@@ -47,10 +71,8 @@
 
             <!-- User Login Functionality -->
             <div class="user_login_dash">
-                <button v-on:click="oauth">login</button>
-                <p v-if="!notLoggedIntoWordpress">You are logged into Wordpress.</p>
-                <p v-if="!notLoggedIntoMedium">You are logged into Medium.</p>
-                <button v-on:click="mediumAuth">Medium Log In</button>
+                
+                
             </div>
         </div>
 
@@ -133,7 +155,9 @@
                 twitch: [],
                 notLoggedIntoWordpress: true,
                 notLoggedIntoMedium: true,
-                postForm:{title:'', body:'', tags:''}
+                postForm:{title:'', body:'', tags:''},
+                user_info: null,
+                wp_sites: null
             },
             methods:{
                 mediumAuth:function(){
@@ -145,10 +169,6 @@
                     // Content-Type: application/x-www-form-urlencoded
                     // Accept: application/json
                     // Accept-Charset: utf-8
-
-                    
-
-                    
                 },
                 get_images:function(){
                     const vue = this
@@ -188,7 +208,7 @@
                 },
                 get_users_sites(){
                     var ac = window.localStorage.getItem("access_token");
-                    console.log('ac:', ac);
+                    const vue = this;
                     var url = 'https://public-api.wordpress.com/rest/v1.1/me/sites'
                     axios({
                         method: 'get',
@@ -198,11 +218,28 @@
                         }
                     })
                     .then(function(response){
-                        console.log('get_users_sites, response:', response)
+                        console.log('get_users_sites, response:', response);
+                        if(response.status == 200){
+                            var wp_sites = []
+                            for(var i=0; i<response.data.sites.length; i++){
+                                wp_site = response.data.sites[i]
+                                wp_sites.push({
+                                    "id":wp_site['ID'],
+                                    "name":wp_site['name'],
+                                    "url":wp_site['URL']
+                                })
+                            }
+                            vue.wp_sites = wp_sites;
+                            window.localStorage.setItem('wp_sites', JSON.stringify(wp_sites));
+                        }
+                        else{
+                            alert('ERROR with getting sites.')
+                        }
                     })
                     .catch(function(error){
-
+                        alert(JSON.stringify(error));
                     })
+
                 },
                 oauth:function(){
                     //response_type=token for client, =code for server.
@@ -270,12 +307,27 @@
                     //     this.oauth_token_server_side(state, code);
                     // }
                     // else 
+                    const vue = this;
+
                     var myStorage = window.localStorage;
+
+                    // myStorage.removeItem("wp_sites");
+                    // myStorage.removeItem("access_token");
+
+
+                    //check for wordpress sites
+                    if(myStorage.getItem("wp_sites") !== null){
+                        vue.wp_sites = JSON.parse(myStorage.getItem("wp_sites"));
+                    }
+
+                    if(window.localStorage.getItem('user_info') !== null){
+                        vue.user_info = JSON.parse(window.localStorage.getItem('user_info'));
+                    }
 
                     //check for Wordpress token
                     if(myStorage.getItem("access_token") !== null){
                         console.log('you have a access token.');
-                        const vue = this;
+                        // const vue = this;
                         vue.notLoggedIntoWordpress = false;
                     }
                     else if(window.location.href.indexOf("access_token") > -1 && window.location.href.indexOf("expires_in") > -1) {
@@ -284,21 +336,57 @@
                         expires_in = info.substring(info.indexOf('access_token')+13,)
                         expires_in = expires_in.substring(expires_in.indexOf('expires_in')+11,)
                         expires_in = expires_in.substring(0,expires_in.indexOf('&'))
-                        // console.log('access_token:', access_token, expires_in);
 
                         access_token = decodeURIComponent(access_token)
-
-                        console.log('settokeN:', access_token);
                         myStorage.setItem('access_token', access_token);
                         myStorage.setItem('expires_in', expires_in);
 
-                        // this.oauth_client_side(access_token, expires_in);
+                        vue.notLoggedIntoWordpress = false;
+
+                        //get user information and store into localstorage
+                        var url = 'https://public-api.wordpress.com/rest/v1.1/me/'
+                        axios({
+                            method: 'get',
+                            url: url,
+                            headers: {
+                                'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
+                            }
+                        })
+                        .then(function(response){
+                            console.log("me response:", response);
+                            var user_info = {};
+                            if (response.status == 200){
+                                user_info['profile_img'] = response.data.avatar_URL;
+                                user_info['name'] = response.data.display_name;
+                                user_info['id'] = response.data.ID;
+                                vue.user_info = user_info;
+                                window.localStorage.setItem('user_info', JSON.stringify(user_info));
+                            }
+                            else{
+                                alert("Failed get user information: " + JSON.stringify(response))
+                            }
+                        })
+                        .catch(function(error){
+                            alert(JSON.stringify(error));
+                        })
+                    }
+
+                    if(vue.notLoggedIntoWordpress){
+                        //when not logged in, then remove these if they exists
+                        if(myStorage.getItem("wp_sites") !== null){
+                            myStorage.removeItem("wp_sites");
+                            vue.wp_sites = null;
+                        }
+                        if(window.localStorage.getItem('user_info') !== null){
+                            myStorage.removeItem('user_info');
+                            vue.user_info = null;
+                        }   
                     }
                     
                     //check for Medium token
                     if(myStorage.getItem("medium_token") !== null){
                         console.log('you have a medium_token.');
-                        const vue = this;
+                        // const vue = this;
                         vue.notLoggedIntoMedium = false;
                     }
                     else if(window.location.href.indexOf('code=') > -1 && window.location.href.indexOf('state=') > -1){
@@ -327,8 +415,6 @@
                         .catch(function(error){
                             console.log('medium token, error:', error);
                         });
-
-
                     }
                 }
             },
