@@ -34,27 +34,58 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
 }
 
 .content-left{
-    width: 25%;
+    width: 20%;
     display: inline-block;
     float: left;
 }
 .content-right{
-    width: 70%;
+    width: 80%;
     display: inline-block;
 }
 .contain-writer{
-    width: 95%;
+    width: 80%;
     margin: 0 auto;
     padding:2em;
 }
+.hidden{
+    display: none;
+}
+.user-info{
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    width: 5em;
+}
+.user-info > img{
+    border-radius: 100%;
+    width: 30px;
+    cursor: pointer;
+    float: right;
+    transition: width .1s ease;
+    border: 2px solid gray;
+}
+.user-info > img:hover{
+    border: 2px solid purple;
+    width: 37px;
+}
+.user-info > h3{
+    font-size: 13px;
+    display: inline-block;
+    float: right;
+}
+.user-info #sign-out-box{
+    float: right;
+    margin-top: 6px;
+}
+
 #editor{
     /*border: 2px solid black;*/
     margin-top:3em;
     padding:3em;
     box-shadow: 2px 1px 17px -4px rgba(0, 0, 0, 0.2);
+    box-shadow: -7px 2px 18px -3px rgba(0, 0, 0, 0.1);
 }
 #editor:focus{
-    box-shadow: none !important;
     outline: none !important;
 }
 
@@ -65,6 +96,17 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
     line-height: 1.58;
     letter-spacing: -.003em;
 }
+#editor blockquote{
+    font-family: Overpass Mono;
+    color:rgba(0,0,0,.8);
+    font-size: 25px;
+    line-height: 2;
+    letter-spacing: -.004em;
+    font-style: italic;
+    width: 80%;
+    margin: 0 auto;
+}
+
 #editor h1,
 #editor h2{
     font-family: Asap;
@@ -88,12 +130,15 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
     padding:10px;
     border: 2px solid #ececec;
     border-radius: 12px;
-    width: 25em;
+    width: 28em;
 }
 .toolbar a{
     font-size: 22px;
     color: #ececec;
     padding: 10px;
+    cursor: pointer;
+    transition: color .2s ease;
+    -webkit-transition: color .2s ease;
 }
 .toolbar a:hover{
     color: #212121;

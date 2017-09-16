@@ -17,13 +17,18 @@
 
     <div id="app">
 
+        <div v-if="user_info" class="user-info">
+            <img v-bind:src="user_info.profile_img" v-on:click="showSignOut = !showSignOut" alt="profile"/>
+            <!-- <h3>Hello {{user_info.name}}</h3> -->
+            <div id="sign-out-box" v-bind:class="{ hidden: showSignOut }">
+                <button v-on:click="signOut">Sign Out</button>
+            </div>
+        </div>
+
         <div class="content-left">
             <h1>Janice</h1>
 
-            <div v-if="user_info">
-                <img v-bind:src="user_info.profile_img" alt="profile"/>
-                <h3>Hello {{user_info.name}}</h3>
-            </div>
+            
 
             <div id="wordpress-control-center" class="control-panel">
                 <h4>Wordpress Status : 
@@ -112,6 +117,8 @@
                 <a href="#" data-command='p'>P</a>
                 <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
 
+                <a href="#" data-command='blockquote'><i class='fa fa-quote-left'></i></a>
+
                 <!-- <a href="#" data-command='subscript'><i class='fa fa-subscript'></i></a>
                 <a href="#" data-command='superscript'><i class='fa fa-superscript'></i></a> -->
                 </div>
@@ -125,7 +132,6 @@
 
 
     <script type="text/javascript">
-
         var toolbar_a = document.getElementsByClassName('toolbar')[0].getElementsByTagName('a')
         for (var i = 0; i < toolbar_a.length; i++) {
             toolbar_a[i].onclick = function(){ elementChange(this) };
@@ -134,7 +140,7 @@
         function elementChange(elem){
             console.log('elem:', elem);
             var command = elem.getAttribute('data-command');
-            if (command == 'h1' || command == 'h2' || command == 'p') {
+            if (command == 'h1' || command == 'h2' || command == 'p' || command == 'blockquote') {
                 document.execCommand('formatBlock', false, command);
             }
             else if (command == 'createlink' || command == 'insertimage') {
@@ -157,7 +163,8 @@
                 notLoggedIntoMedium: true,
                 postForm:{title:'', body:'', tags:''},
                 user_info: null,
-                wp_sites: null
+                wp_sites: null,
+                showSignOut: true
             },
             methods:{
                 mediumAuth:function(){
@@ -239,6 +246,16 @@
                     .catch(function(error){
                         alert(JSON.stringify(error));
                     })
+
+                },
+                signOut:function(){
+                    //sign out the user aka remove all the cookies and such.
+                    localStorage.clear();
+                    const vue = this;
+                    vue.notLoggedIntoWordpress = true;
+                    vue.notLoggedIntoMedium = true;
+                    vue.user_info = null; 
+                    vue.wp_sites = null;
 
                 },
                 oauth:function(){
