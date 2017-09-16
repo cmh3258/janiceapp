@@ -9,6 +9,15 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
     color: #3a3a3a;
 }
 
+.logo-font{
+    font-family:Pacifico;
+    color: #353528;
+}
+h1.logo-font{
+    margin-top: 1px;
+    margin-left: 11px;
+}
+
 .unsplash-photo-container{
     width: 25em;
     margin: 1em;
@@ -45,7 +54,7 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
 .contain-writer{
     width: 80%;
     margin: 0 auto;
-    padding:2em;
+    padding: 4em 2em 4em;
 }
 .hidden{
     display: none;
@@ -83,7 +92,7 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
     margin-top:3em;
     padding:3em;
     box-shadow: 2px 1px 17px -4px rgba(0, 0, 0, 0.2);
-    box-shadow: -7px 2px 18px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: -3px 2px 18px -3px rgba(0, 0, 0, 0.1);
 }
 #editor:focus{
     outline: none !important;
@@ -151,20 +160,49 @@ h5{
     margin-bottom: 9px;
 }
 .control-panel{
-    background: #eff4f7;
-    background: #eff4f7;
+    /*background: #eff4f7;
+    background: #eff4f7;*/
     padding: 1em 1.2em;
+    padding: 11px 14px;
     margin-bottom: 5px;
 }
 .control-panel h4{
     font-weight: 500;
+    display: inline-block;
+    margin: 0;
 }
 .control-panel h5{
     font-weight: 500;
 }
+.control-panel button.log-in{
+    float: right;
+    border: 0px;
+    background: white;
+    margin-top: 2px;
+    cursor: pointer;
+}
+.control-panel button.log-in:hover{
+    color: blue;
+}
 
 #wordpress-control-center{
     
+}
+
+
+.base-status{
+    width: 4px;
+    border-radius: 100%;
+    background-color: gray;
+    padding: 3px;
+    height: 4px;
+    display: inline-block;
+}
+.green-status{
+    background-color: green;
+}
+.red-status{
+    background-color: red;
 }
 
 

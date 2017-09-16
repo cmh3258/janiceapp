@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Overpass+Mono:300,400,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 
 
 
@@ -26,53 +27,91 @@
         </div>
 
         <div class="content-left">
-            <h1>Janice</h1>
+            <h1 class="logo-font">JaniceWrite</h1>
 
             
 
             <div id="wordpress-control-center" class="control-panel">
-                <h4>Wordpress Status : 
-                    <span v-if="!notLoggedIntoWordpress">Logged In.</span>
-                    <span v-if="notLoggedIntoWordpress">Not Logged In.</span>
+                <h4>Wordpress
+                    <span v-if="!notLoggedIntoWordpress" class="base-status green-status"></span>
+                    <span v-if="notLoggedIntoWordpress" class="base-status red-status"></span>
                 </h4>
-                <button v-if="notLoggedIntoWordpress" v-on:click="oauth">Log In</button>
+                <button v-if="notLoggedIntoWordpress" v-on:click="oauth" class="log-in">Log In</button>
 
-                <div v-if="!notLoggedIntoWordpress">
+                
+            </div>
+
+            <div id="medium-control-center" class="control-panel">
+                <h4>Medium
+                    <span v-if="!notLoggedIntoMedium" class="base-status green-status"></span>
+                    <span v-if="notLoggedIntoMedium" class="base-status red-status"></span>
+                </h4>
+                <button v-if="notLoggedIntoMedium" v-on:click="mediumAuth" class="log-in">Log In</button>
+            </div>
+
+
+            <!-- <form id="blog-form" v-on:submit.prevent="submit_post">
+                <input placeholder="tags" type="text" v-model="postForm.tags"/>
+                <input type="submit" value="Submit"/>
+            </form> -->
+            <!-- {{postForm}} -->
+
+            <hr>
+
+            <!-- Hero Img functionality -->
+           <!--  <div class="hero-img-container">
+                <h4>Featured Image <i class="fa fa-chevron-down" aria-hidden="true"></i></h4>
+
+                <div v-for="photo in twitch" v-if="photo != null">
+                    <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+                </div>
+                <p v-if="twitch.length != 0">provided by unsplash.com</p>
+
+            </div> -->
+
+
+
+            <h4 v-on:click="showpublishpanel = !showpublishpanel">Publish <i class="fa fa-chevron-down" aria-hidden="true"></i></h4>
+            <div id="publish-panel" v-if="showpublishpanel">
+
+                <!-- Tags -->
+                <input placeholder="tags" type="text" v-model="postForm.tags"/>
+
+                
+                <!-- Hero Img functionality -->
+                <div>
+                    <button v-on:click="get_images">Featured/Hero Image</button>
+                    <div v-for="photo in twitch" v-if="photo != null">
+                        <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
+                    </div>
+                    <p v-if="twitch.length != 0">provided by unsplash.com</p>
+                </div>
+
+                <!-- Decide which to publish to -->
+                <input type="checkbox" name="wordpress" value="true" v-model="pubtowordpress">Wordpress<br>
+                <div v-if="!notLoggedIntoWordpress && pubtowordpress">
                     <h5>Select blog to write on.</h5>
                     <button v-if="!wp_sites" v-on:click="get_users_sites">Get Sites</button>
                     <select v-if="wp_sites">
                         <option v-for="wp_site in wp_sites" :value="wp_site">{{wp_site.url}} </option>
                     </select>
                 </div>
+
+                <input type="checkbox" name="medium" value="true">Medium<br>
+
+                <!-- Social share - maybe due this after you publish?? -->
+                <!-- <div>
+                    <label>Share</label>
+                    <div>
+                        <input type="checkbox" name="social">Facebook<br>
+                        <input type="checkbox" name="social">Twitter<br>
+                    </div>
+                </div> -->
+
+
+
             </div>
 
-            <div id="medium-control-center" class="control-panel">
-                <h4>Medium Status : 
-                    <span v-if="!notLoggedIntoMedium">Logged In.</span>
-                    <span v-if="notLoggedIntoMedium">Not Logged In.</span>
-                </h4>
-                <button v-on:click="mediumAuth">Log In</button>
-            </div>
-
-
-            <form id="blog-form" v-on:submit.prevent="submit_post">
-                <input placeholder="tags" type="text" v-model="postForm.tags"/>
-                <input type="submit" value="Submit"/>
-            </form>
-            <!-- {{postForm}} -->
-
-            <hr>
-
-            <!-- Hero Img functionality -->
-            <div class="hero-img-container">
-                <button v-on:click="get_images">Insert Cover/Hero Photo</button>
-                <div v-for="photo in twitch" v-if="photo != null">
-                    <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
-                </div>
-                <p>provided by unsplash.com</p>
-            </div>
-
-            <hr>
 
             <!-- User Login Functionality -->
             <div class="user_login_dash">
@@ -164,7 +203,9 @@
                 postForm:{title:'', body:'', tags:''},
                 user_info: null,
                 wp_sites: null,
-                showSignOut: true
+                showSignOut: true,
+                pubtowordpress: false,
+                showpublishpanel: false
             },
             methods:{
                 mediumAuth:function(){
