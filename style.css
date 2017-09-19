@@ -1,4 +1,10 @@
 
+html,body{
+    /*height: 100%;
+    overflow: hidden;*/
+    margin: 0;
+}
+
 h1{
     color: blue;
 }
@@ -42,19 +48,37 @@ h1.logo-font{
 	resize:vertical;
 }
 
+#app{
+    
+    /*width: 20%;*/
+    /*top:1em;*/
+}
 .content-left{
+    position: absolute;
+    background: white;
     width: 20%;
     display: inline-block;
     float: left;
 }
 .content-right{
+    position: absolute;
+    height: 100vh;
+    background: #fbfbfb;
     width: 80%;
+    left: 20%;
+    overflow: scroll;
+    /*width: 80%;
     display: inline-block;
+    background-color: #fbfbfb;
+    /*overflow: scroll;
+    overflow-x: hidden;*/
 }
 .contain-writer{
     width: 80%;
     margin: 0 auto;
     padding: 4em 2em 4em;
+    height: 100%;
+    
 }
 .hidden{
     display: none;
@@ -64,6 +88,7 @@ h1.logo-font{
     right: 1em;
     top: 1em;
     width: 5em;
+    z-index: 2;
 }
 .user-info > img{
     border-radius: 100%;
@@ -93,6 +118,9 @@ h1.logo-font{
     padding:3em;
     box-shadow: 2px 1px 17px -4px rgba(0, 0, 0, 0.2);
     box-shadow: -3px 2px 18px -3px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    /*height: 80%;*/
+    margin-bottom: 10em;
 }
 #editor:focus{
     outline: none !important;
@@ -169,7 +197,7 @@ h5{
 .control-panel h4{
     font-weight: 500;
     display: inline-block;
-    margin: 0;
+    /*margin: 0;*/
 }
 .control-panel h5{
     font-weight: 500;
@@ -214,6 +242,7 @@ h5{
     left: 16em;
     top: 5em;
     border-radius: 9px;
+    z-index: 3;
 }
 #spp-inner{
     margin: 0 auto;
