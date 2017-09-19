@@ -3,6 +3,8 @@ html,body{
     /*height: 100%;
     overflow: hidden;*/
     margin: 0;
+    background: #fbfbfb;
+
 }
 
 h1{
@@ -20,8 +22,10 @@ h1,h2,h3,h4,h5,h6,p,li,a,button{
     color: #353528;
 }
 h1.logo-font{
-    margin-top: 1px;
-    margin-left: 11px;
+    /*margin-top: 1px;
+    margin-left: 11px;*/
+    font-size: 28px;
+    text-align: center;
 }
 
 .unsplash-photo-container{
@@ -55,18 +59,22 @@ h1.logo-font{
 }
 .content-left{
     position: absolute;
-    background: white;
+    /*background: white;*/
+    /*background: #fbfbfb;*/
     width: 20%;
-    display: inline-block;
-    float: left;
+    /*display: inline-block;*/
+    /*float: left;*/
+    left: 0;
+    height: 90vh;
 }
 .content-right{
     position: absolute;
     height: 100vh;
-    background: #fbfbfb;
-    width: 80%;
-    left: 20%;
+    /*background: #fbfbfb;*/
+    width: 70%;
+    left: 28%;
     overflow: scroll;
+    /*background-color: blue;*/
     /*width: 80%;
     display: inline-block;
     background-color: #fbfbfb;
@@ -74,11 +82,10 @@ h1.logo-font{
     overflow-x: hidden;*/
 }
 .contain-writer{
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     padding: 4em 2em 4em;
-    height: 100%;
-    
+    /*height: 100%;*/
 }
 .hidden{
     display: none;
@@ -167,7 +174,11 @@ h1.logo-font{
     padding:10px;
     border: 2px solid #ececec;
     border-radius: 12px;
-    width: 28em;
+    /*width: 28em;*/
+    position: absolute;
+    left: 20em;
+    top: 3em;
+    text-align: center;
 }
 .toolbar a{
     font-size: 22px;
@@ -176,6 +187,7 @@ h1.logo-font{
     cursor: pointer;
     transition: color .2s ease;
     -webkit-transition: color .2s ease;
+    display: block;
 }
 .toolbar a:hover{
     color: #212121;
