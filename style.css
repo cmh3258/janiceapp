@@ -206,3 +206,26 @@ h5{
 }
 
 
+#select-photo-popup{
+    position: absolute;
+    background: black;
+    width: 650px;
+    margin: 0 auto;
+    left: 16em;
+    top: 5em;
+    border-radius: 9px;
+}
+#spp-inner{
+    margin: 0 auto;
+    text-align: center;
+    padding: 3em;
+}
+#hero-small img{
+    width: 100%;
+}
+#hero-small p{
+    font-size: 10px;
+    padding:0;
+}
+
+
