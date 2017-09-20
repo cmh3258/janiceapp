@@ -1,181 +1,163 @@
 <html>
 
-    <!-- Vue Scripts -->
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <head>
+        <!-- Vue Scripts -->
+        <script src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <!-- Style -->
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+        <!-- Style -->
+        <link rel="stylesheet" type="text/css" href="style.css"/>
 
-    <!-- Fonts -->
-    <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Overpass+Mono:300,400,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+        <!-- Fonts -->
+        <script src="https://use.fontawesome.com/a55bf4c5ff.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Overpass+Mono:300,400,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:100,300,400,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    </head>
 
+    <body>
 
+        <h1 class="logo-font">JaniceWrite</h1>
 
-    <div id="app">
-
-        <div v-if="user_info" class="user-info">
-            <img v-bind:src="user_info.profile_img" v-on:click="showSignOut = !showSignOut" alt="profile"/>
-            <!-- <h3>Hello {{user_info.name}}</h3> -->
-            <div id="sign-out-box" v-bind:class="{ hidden: showSignOut }">
-                <button v-on:click="signOut">Sign Out</button>
-            </div>
+        <div class="toolbar">
+            <a href="#" data-command='bold'><i class='fa fa-bold'></i></a>
+            <a href="#" data-command='italic'><i class='fa fa-italic'></i></a>
+            <a href="#" data-command='underline'><i class='fa fa-underline'></i></a>
+            <a href="#" data-command='insertUnorderedList'><i class='fa fa-list-ul'></i></a>
+            <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
+            <a href="#" data-command='h1'>H1</a>
+            <a href="#" data-command='h2'>H2</a>
+            <a href="#" data-command='p'>P</a>
+            <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
+            <a href="#" data-command='blockquote'><i class='fa fa-quote-left'></i></a>
         </div>
 
-        <div class="content-left">
-            <h1 class="logo-font">JaniceWrite</h1>
 
-            
-
-            <div id="wordpress-control-center" class="control-panel">
-                <h4>Wordpress
-                    <span v-if="!notLoggedIntoWordpress" class="base-status green-status"></span>
-                    <span v-if="notLoggedIntoWordpress" class="base-status red-status"></span>
-                </h4>
-                <button v-if="notLoggedIntoWordpress" v-on:click="oauth" class="log-in">Log In</button>
-
-                
-            </div>
-
-            <div id="medium-control-center" class="control-panel">
-                <h4>Medium
-                    <span v-if="!notLoggedIntoMedium" class="base-status green-status"></span>
-                    <span v-if="notLoggedIntoMedium" class="base-status red-status"></span>
-                </h4>
-                <button v-if="notLoggedIntoMedium" v-on:click="mediumAuth" class="log-in">Log In</button>
-            </div>
-
-
-            <!-- <form id="blog-form" v-on:submit.prevent="submit_post">
-                <input placeholder="tags" type="text" v-model="postForm.tags"/>
-                <input type="submit" value="Submit"/>
-            </form> -->
-            <!-- {{postForm}} -->
-
-            <hr>
-
-            <!-- Hero Img functionality -->
-           <!--  <div class="hero-img-container">
-                <h4>Featured Image <i class="fa fa-chevron-down" aria-hidden="true"></i></h4>
-
-                <div v-for="photo in twitch" v-if="photo != null">
-                    <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo.urls.regular)"/>
-                </div>
-                <p v-if="twitch.length != 0">provided by unsplash.com</p>
-
-            </div> -->
-
-            <div class="control-panel">
-
-            <h4 v-on:click="showpublishpanel = !showpublishpanel">Publish <i class="fa fa-chevron-down" aria-hidden="true"></i></h4>
-            <div id="publish-panel" v-if="showpublishpanel">
-
-
-
-                
-                <!-- Hero Img functionality -->
-                <div>
-                    <h4>Add Featured/Hero Image</h4>
-                    <div v-if="heroImage != null" id="hero-small">
-                        <img :src="heroImage.link"/>
-                        <p>Photo by <a v-bind:href="heroImage.users_profile">{{heroImage.users_name}}</a></p>
-                    </div>
-                    <input type="text" v-model="photoSearchWord" placeholder="eg. Planet, red, person"><br>
-                    <button v-on:click="get_images(photoSearchWord)">Search Unplash.com</button>
-                    <div id="select-photo-popup" v-if="twitch.length != 0">
-                        <div id="spp-inner">
-                            <div v-for="photo in twitch" v-if="photo != null">
-                                <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo)"/>
-                                <p>Photo by <a v-bind:href="photo.user.links.html">{{photo.user.first_name}}</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <p v-if="twitch.length != 0">provided by unsplash.com</p> -->
-                </div>
-
-                <!-- Decide which to publish to -->
-                <div>
-                    <h4>Select Sites to Publish To</h4>
-                    
-                    <div v-if="!notLoggedIntoWordpress">
-                        <input type="checkbox" name="wordpress" value="true" v-model="pubtowordpress">Wordpress<br>
-                        <div v-if="!notLoggedIntoWordpress && pubtowordpress">
-                            <h5>Select blog to write on.</h5>
-                            <button v-if="!wp_sites" v-on:click="get_users_sites">Get Sites</button>
-                            <select v-if="wp_sites">
-                                <option v-for="wp_site in wp_sites" :value="wp_site">{{wp_site.url}} </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div v-if="!notLoggedIntoMedium">
-                        <input type="checkbox" name="medium" value="true">Medium<br>
-                    </div>
-                </div>
-
-
-                <!-- Social share - maybe due this after you publish?? -->
-                <!-- <div>
-                    <label>Share</label>
-                    <div>
-                        <input type="checkbox" name="social">Facebook<br>
-                        <input type="checkbox" name="social">Twitter<br>
-                    </div>
-                </div> -->
-
-
-                <!-- Tags -->
-                <div>
-                    <h4>Add Tags</h4>
-                    <label>Comma Seperate Tags (5 max)</label>
-                    <input placeholder="tags" type="text" v-model="postForm.tags"/>
-                </div>
-
-
-            </div>
-
-
-            <!-- User Login Functionality -->
-            <div class="user_login_dash">
-                
-                
-            </div>
-            </div>
-
-
-
-            
-        </div>
-
-    </div>
-
-    <div class="toolbar">
-        <a href="#" data-command='bold'><i class='fa fa-bold'></i></a>
-        <a href="#" data-command='italic'><i class='fa fa-italic'></i></a>
-        <a href="#" data-command='underline'><i class='fa fa-underline'></i></a>
-        <a href="#" data-command='insertUnorderedList'><i class='fa fa-list-ul'></i></a>
-        <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
-        <a href="#" data-command='h1'>H1</a>
-        <a href="#" data-command='h2'>H2</a>
-        <a href="#" data-command='p'>P</a>
-        <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
-        <a href="#" data-command='blockquote'><i class='fa fa-quote-left'></i></a>
-    </div>
-
-
-        <div class="content-right">
+        <div class="main-content">
             <div class="contain-writer">
                 
                 <div id='editor' contenteditable>
                   <h1>Title</h1>
-                  <p>You heart...</p>
+                  <p>What's on your mind...</p>
                 </div>
             </div>
         </div>
+
+
+        <div id="app">
+
+            <div v-if="user_info" class="user-info">
+                <img v-bind:src="user_info.profile_img" v-on:click="showSignOut = !showSignOut" alt="profile"/>
+                <!-- <h3>Hello {{user_info.name}}</h3> -->
+                <div id="sign-out-box" v-bind:class="{ hidden: showSignOut }">
+                    <button v-on:click="signOut">Sign Out</button>
+                </div>
+            </div>
+
+
+            
+
+            <div id="dashboard">
+                
+                <h4 class="right" id="publish-info" v-on:click="showdashboard = !showdashboard">Publish Info 
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </h4>
+
+                <div v-if="showdashboard">
+                    <div class="blog-status-login">
+                        <h4>Wordpress
+                            <span v-if="!notLoggedIntoWordpress" class="base-status green-status"></span>
+                            <span v-if="notLoggedIntoWordpress" class="base-status red-status"></span>
+                        </h4>
+                        <button v-if="notLoggedIntoWordpress" v-on:click="oauth" class="log-in">Log In</button>
+                    </div>
+
+                    <div class="blog-status-login">
+                        <h4>Medium
+                            <span v-if="!notLoggedIntoMedium" class="base-status green-status"></span>
+                            <span v-if="notLoggedIntoMedium" class="base-status red-status"></span>
+                        </h4>
+                        <button v-if="notLoggedIntoMedium" v-on:click="mediumAuth" class="log-in">Log In</button>
+                    </div>
+
+                    <hr>
+
+                    <div class="">
+                        <!-- <h4 v-on:click="showpublishpanel = !showpublishpanel">Publish 
+                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </h4> -->
+
+                        <div id="publish-panel">
+                            <!-- Hero Img functionality -->
+                            <div>
+                                <h4>Add Featured/Hero Image</h4>
+                                <div v-if="heroImage != null" id="hero-small">
+                                    <img :src="heroImage.link"/>
+                                    <p>Photo by <a v-bind:href="heroImage.users_profile">{{heroImage.users_name}}</a></p>
+                                </div>
+                                <input type="text" v-model="photoSearchWord" placeholder="eg. Planet, red, person"><br>
+                                <button v-on:click="get_images(photoSearchWord)">Search Unplash.com</button>
+                                <div id="select-photo-popup" v-if="twitch.length != 0">
+                                    <div id="spp-inner">
+                                        <div v-for="photo in twitch" v-if="photo != null">
+                                            <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo)"/>
+                                            <p>Photo by <a v-bind:href="photo.user.links.html">{{photo.user.first_name}}</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <p v-if="twitch.length != 0">provided by unsplash.com</p> -->
+                            </div>
+
+                            <!-- Decide which to publish to -->
+                            <div class="elbow-room">
+                                <h4>Select Sites to Publish To</h4>
+                                
+                                <div v-if="!notLoggedIntoWordpress">
+                                    <input type="checkbox" name="wordpress" value="true" v-model="pubtowordpress"><label>Wordpress</label><br>
+                                    <div v-if="!notLoggedIntoWordpress && pubtowordpress">
+                                        <h5>Select blog to write on.</h5>
+                                        <button v-if="!wp_sites" v-on:click="get_users_sites">Get Sites</button>
+                                        <select v-if="wp_sites">
+                                            <option v-for="wp_site in wp_sites" :value="wp_site">{{wp_site.url}} </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div v-if="!notLoggedIntoMedium">
+                                    <input type="checkbox" name="medium" value="true"><label>Medium</label><br>
+                                </div>
+                            </div>
+
+                            <!-- Social share - maybe due this after you publish?? -->
+                            <!-- <div>
+                                <label>Share</label>
+                                <div>
+                                    <input type="checkbox" name="social">Facebook<br>
+                                    <input type="checkbox" name="social">Twitter<br>
+                                </div>
+                            </div> -->
+
+                            <!-- Tags -->
+                            <div class="elbow-room">
+                                <h4>Add Tags</h4>
+                                <label>Comma Seperate Tags (5 max)</label>
+                                <input placeholder="tags" type="text" v-model="postForm.tags"/>
+                            </div>
+
+                            <!-- Publish or Save as Draft -->
+                            <div class="elbow-room">
+                                <input type="radio" name="publishdraft"><label>Publish</label><br>
+                                <input type="radio" name="publishdraf"><label>Save As Draft</label><br>
+                            </div>
+
+                            <button class="submit-btn">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 
 
     <script type="text/javascript">
@@ -215,7 +197,8 @@
                 pubtowordpress: false,
                 showpublishpanel: false,
                 photoSearchWord: null,
-                heroImage: null
+                heroImage: null,
+                showdashboard: null
             },
             methods:{
                 mediumAuth:function(){
@@ -504,6 +487,8 @@
         app.check_url();
 
     </script>
+
+
 
 </html>
 
