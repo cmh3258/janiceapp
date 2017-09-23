@@ -100,7 +100,7 @@ label{
     position: absolute;
     height: 100vh;
     /*background: #fbfbfb;*/
-    width: 70%;
+    width: 75%;
     /*left: 28%;*/
     overflow: scroll;
     /*background-color: blue;*/
@@ -109,13 +109,13 @@ label{
     background-color: #fbfbfb;
     /*overflow: scroll;
     overflow-x: hidden;*/
-    left: 7em;
+    left: 10em;
     top: 5em;
 }
 .contain-writer{
     width: 90%;
     margin: 0 auto;
-    padding: 0em 2em 4em;
+    padding: 1em 2em 4em;
     /*height: 100%;*/
 }
 .hidden{
@@ -166,7 +166,7 @@ label{
 
 #editor{
     /*border: 2px solid black;*/
-    margin-top:3em;
+    margin-top:1em;
     padding:3em;
     box-shadow: 2px 1px 17px -4px rgba(0, 0, 0, 0.2);
     box-shadow: -3px 2px 18px -3px rgba(0, 0, 0, 0.1);
@@ -176,6 +176,13 @@ label{
 }
 #editor:focus{
     outline: none !important;
+}
+
+.placeholder{
+    color:gray !important;
+}
+.placeholder_default{
+    height: 1em;
 }
 
 #editor p{
@@ -196,23 +203,38 @@ label{
     margin: 0 auto;
 }
 
+
+
 #editor h1,
-#editor h2{
+#editor h2,
+#blog_title{
     font-family: Asap;
     color:rgba(0,0,0,.8);
-    
 }
 
-#editor h1{
+#editor h1,
+#blog_title{
     font-size: 40px;
     line-height: 1.04;
     letter-spacing: 1.1px;
+    font-weight: 600;
 }
 
 #editor h2{
     font-size: 30px;
     line-height: 1;
     letter-spacing: 1px;
+}
+
+#blog_title{
+    border: 0px;
+    background: none !important;
+    font-size: 45px;
+    line-height: 50px;
+}
+#blog_title:focus{
+    border: 0;
+    outline: 0;
 }
 
 .toolbar{
