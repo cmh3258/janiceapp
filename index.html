@@ -197,7 +197,8 @@
                     title:'', 
                     body:'', 
                     tags:'',
-                    publish_to_wp:false
+                    publish_to_wp:false,
+                    publish_to_medium:false
                 },
                 user_info: null,
                 wp_sites: null,
@@ -271,15 +272,71 @@
                 },
                 submit_post: function(){
                     const vue = this;
-                    vue.postForm.body = document.getElementById("editor");
+                    vue.postForm.body = document.getElementById("editor").innerHTML;
                     console.log('heroImage:', vue.heroImage);
                     console.log('submit_post: start of method:', vue.postForm);
 
                     if (vue.postForm.title.length == 0){
-                        alert("Most have a title");
+                        alert("Must have a title");
                     }
                     if (vue.postForm.body.length == 0){
-                        alert("Most have a body");
+                        alert("Must have a body");
+                    }
+
+                    if (!('publishOrDraft' in vue.postForm)){
+                        alert("Must select Publish or Draft");
+                    }
+
+                    //split the tags so we can have it in an array
+                    var tags = vue.postForm.tags;
+                    if(vue.postForm.tags.length > 0){
+                        tags = tags.split(',')
+                    }
+
+                    //need at least wp or medium to submit the post
+                    if (!vue.postForm.publish_to_wp && !vue.postForm.publish_to_medium){
+                        alert("Must select a service to post to")
+                    }
+
+                    if(vue.postForm.publish_to_wp){
+                        if(!('publish_to_wp_info' in vue.postForm)){
+                            alert("Must select Wordpress blog to post to.")
+                        }
+                        if(!('id' in vue.postForm.publish_to_wp_info)){
+                            alert("No blog id found on the selected Wordpress site")
+                        }
+
+                        //now push post to wordpress
+                        axios({
+                            method: 'post',
+                            url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + vue.postForm.publish_to_wp_info.id + '/posts/new/',
+                            data: {
+                                title:vue.postForm.title,
+                                content:vue.postForm.body,
+                                tags:tags,
+                                // categories:'API',
+                                status:"draft", //vue.postForm.publishOrDraft,
+                                featured_image:null //exisiting attatchment id
+                            },
+                            headers: {
+                                // 'content-type': 'application/json',
+                                'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
+                            }
+                        })
+                        .then(function(response) {
+                            console.log('POST a new post response?', response);
+                            if (response.status == 200){
+                                //this was a success
+                                response.data.URL;
+                            }
+                            else{
+                                //display the error
+                            }
+                        })
+                        .catch(function(error){
+                            console.log('POST a new post error:', error);
+                        });
+
                     }
                     
                 },
