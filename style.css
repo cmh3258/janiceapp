@@ -111,7 +111,15 @@ label{
     overflow-x: hidden;*/
     left: 10em;
     top: 5em;
+    transition: all .1s ease-in-out;
 }
+#dashboard-content{
+    /*transition: all 2s linear;*/
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in;
+}
+
 .contain-writer{
     width: 90%;
     margin: 0 auto;

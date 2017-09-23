@@ -67,7 +67,7 @@
                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
                 </h4>
 
-                <div v-if="showdashboard">
+                <div id="dashboard-content">
                     <div class="blog-status-login">
                         <h4>Wordpress
                             <span v-if="!notLoggedIntoWordpress" class="base-status green-status"></span>
@@ -215,12 +215,17 @@
                 },
                 dashboardToggle: function(){
                     this.showdashboard = !this.showdashboard;
+
                     var mc = document.getElementsByClassName('main-content')[0];
                     if (!this.showdashboard){
+                        document.getElementById('dashboard-content').style.visibility = "hidden";
+                        document.getElementById('dashboard-content').style.opacity = "0";
                         mc.style.width = "75%";
                         mc.style.left = "10em";
                     }
                     else{
+                        document.getElementById('dashboard-content').style.visibility = "visible";
+                        document.getElementById('dashboard-content').style.opacity = "1";
                         mc.style.width = "70%";
                         mc.style.left = "7em";
                     }
