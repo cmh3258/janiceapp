@@ -335,8 +335,8 @@ h5{
     background: black;
     width: 650px;
     margin: 0 auto;
-    left: 16em;
-    top: 5em;
+    right: 17em;
+    top: 4em;
     border-radius: 9px;
     z-index: 3;
 }

@@ -95,10 +95,7 @@
                             <!-- Hero Img functionality -->
                             <div>
                                 <h4>Add Featured/Hero Image</h4>
-                                <div v-if="heroImage != null" id="hero-small">
-                                    <img :src="heroImage.link"/>
-                                    <p>Photo by <a v-bind:href="heroImage.users_profile">{{heroImage.users_name}}</a></p>
-                                </div>
+
                                 <input type="text" v-model="photoSearchWord" placeholder="eg. Planet, red, person"><br>
                                 <button v-on:click="get_images(photoSearchWord)">Search Unplash.com</button>
                                 <div id="select-photo-popup" v-if="twitch.length != 0">
@@ -110,6 +107,14 @@
                                     </div>
                                 </div>
                                 <!-- <p v-if="twitch.length != 0">provided by unsplash.com</p> -->
+                                <div v-if="heroImage != null" id="hero-small">
+                                    <img :src="heroImage.link"/>
+                                    <p>Photo by <a v-bind:href="heroImage.users_profile">{{heroImage.users_name}}</a></p>
+                                    <a v-if="heroImage != null" v-bind:href="heroImage.download">Download Image</a>
+                                </div>
+                                    <input type="file" id="fileUpload" @change="onFileChange">
+
+                                
                             </div>
 
                             <!-- Decide which to publish to -->
@@ -200,6 +205,7 @@
                     publish_to_wp:false,
                     publish_to_medium:false
                 },
+                image_file_name: null,
                 user_info: null,
                 wp_sites: null,
                 showSignOut: true,
@@ -213,6 +219,14 @@
             methods:{
                 mediumAuth:function(){
                     window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=http://localhost:8000/";
+                },
+                onFileChange(e) {
+                    var files = e.target.files || e.dataTransfer.files;
+                    if (!files.length)
+                        return;
+                    var datas = new FormData();
+                    datas.append('media[0]', files[0], files[0].name);
+                    this.image_file_name = datas;
                 },
                 dashboardToggle: function(){
                     this.showdashboard = !this.showdashboard;
@@ -262,7 +276,8 @@
                     const vue = this;
                     console.log('You selected photo_data:', photo_data);
                     var photo_data_final = {
-                        "link":photo_data.urls.regular,
+                        "link":photo_data.urls.raw,
+                        "download":photo_data.links.download + '?force=true',
                         "users_name":photo_data.user.first_name,
                         "users_profile":photo_data.user.links.html
                     }
@@ -306,55 +321,84 @@
                             alert("No blog id found on the selected Wordpress site")
                         }
 
-                        //now push post to wordpress
-                        axios({
-                            method: 'post',
-                            url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + vue.postForm.publish_to_wp_info.id + '/posts/new/',
-                            data: {
-                                title:vue.postForm.title,
-                                content:vue.postForm.body,
-                                tags:tags,
-                                // categories:'API',
-                                status:"draft", //vue.postForm.publishOrDraft,
-                                featured_image:null //exisiting attatchment id
-                            },
-                            headers: {
-                                // 'content-type': 'application/json',
-                                'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
-                            }
-                        })
-                        .then(function(response) {
-                            console.log('POST a new post response?', response);
-                            if (response.status == 200){
-                                //this was a success
-                                response.data.URL;
-                            }
-                            else{
-                                //display the error
-                            }
-                        })
-                        .catch(function(error){
-                            console.log('POST a new post error:', error);
-                        });
+                        if (vue.image_file_name){
+                            //need to upload this to wordpress
+                            var post_id = null;
+
+                            var url = 'https://public-api.wordpress.com/rest/v1.1/sites/' + vue.postForm.publish_to_wp_info.id + '/media/new'
+
+                            axios({
+                                method: 'POST',
+                                url: url,
+                                headers: {
+                                    'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
+                                },
+                                data:vue.image_file_name
+                            })
+                            .then(function(response) {
+                                console.log('Upload the unsplash image response?', response);
+                                if (response.status == 200){
+                                    //this was a success
+                                    vue.upload_post_to_wp(response.media[0].ID, tags);
+                                }
+                                else{
+                                    alert("Upload image error:" + JSON.stringify(response.text));
+                                }
+                            })
+                            .catch(function(error){
+                                console.log('Upload the featured image error:', error);
+                            });
+
+                            // now upload the post -> vue.upload_post_to_wp(post_id, tags);
+                        }
+                        else{
+                            vue.upload_post_to_wp(null, tags);
+                        }
+
+                        
 
                     }
                     
+                },
+                upload_post_to_wp: function(featured_image, tags){
+                    var vue = this;
+                    //now push post to wordpress
+                    axios({
+                        method: 'post',
+                        url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + vue.postForm.publish_to_wp_info.id + '/posts/new/',
+                        data: {
+                            title:vue.postForm.title,
+                            content:vue.postForm.body,
+                            tags:tags,
+                            featured_image: featured_image,
+                            // categories:'API',
+                            status:"draft", //vue.postForm.publishOrDraft,
+                            featured_image:null //exisiting attatchment id
+                        },
+                        headers: {
+                            // 'content-type': 'application/json',
+                            'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
+                        }
+                    })
+                    .then(function(response) {
+                        console.log('POST a new post response?', response);
+                        if (response.status == 200){
+                            //this was a success
+                            response.data.URL;
+                        }
+                        else{
+                            //display the error
+                        }
+                    })
+                    .catch(function(error){
+                        console.log('POST a new post error:', error);
+                    });
                 },
                 upload_image_to_wp: function(){
                     // curl \
                     //  -H 'authorization: Bearer YOUR_API_TOKEN' \
                     //  --data-urlencode 'media_urls=https://s.w.org/about/images/logos/codeispoetry-rgb.png' \
                     //  'https://public-api.wordpress.com/rest/v1.1/sites/82974409/media/new'
-
-                    var url = 'https://public-api.wordpress.com/rest/v1.1/sites/82974409/media/new'
-                    url += '?media_urls=' + image_url
-                    axios({
-                        method: 'get',
-                        url: url,
-                        headers: {
-                            'Authorization': 'BEARER ' + window.localStorage.getItem("access_token")
-                        }
-                    })
 
                 },
                 get_users_sites(){
