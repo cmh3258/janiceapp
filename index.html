@@ -339,7 +339,7 @@
                                 console.log('Upload the unsplash image response?', response);
                                 if (response.status == 200){
                                     //this was a success
-                                    vue.upload_post_to_wp(response.media[0].ID, tags);
+                                    vue.upload_post_to_wp(response.data.media[0].ID, tags);
                                 }
                                 else{
                                     alert("Upload image error:" + JSON.stringify(response.text));
@@ -363,6 +363,7 @@
                 upload_post_to_wp: function(featured_image, tags){
                     var vue = this;
                     //now push post to wordpress
+                    console.log("featured_image:", featured_image);
                     axios({
                         method: 'post',
                         url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + vue.postForm.publish_to_wp_info.id + '/posts/new/',
@@ -373,7 +374,6 @@
                             featured_image: featured_image,
                             // categories:'API',
                             status:"draft", //vue.postForm.publishOrDraft,
-                            featured_image:null //exisiting attatchment id
                         },
                         headers: {
                             // 'content-type': 'application/json',
