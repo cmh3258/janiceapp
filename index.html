@@ -105,10 +105,16 @@
                             <div>
                                 <h4>Add Featured/Hero Image</h4>
 
+                                <span class="fa-stack fa">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <strong class="fa-stack-1x text-primary">1</strong>
+                                </span>
+
                                 <input type="text" v-model="photoSearchWord" placeholder="eg. Planet, red, person"><br>
                                 <button v-on:click="get_images(photoSearchWord)">Search Unplash.com</button>
                                 <div id="select-photo-popup" v-if="twitch.length != 0">
                                     <div id="spp-inner">
+                                        <h2>Select Image</h2>
                                         <div v-for="photo in twitch" v-if="photo != null">
                                             <img class="unsplash-photo-container" :src="photo.urls.regular" v-on:click="selectImg(photo)"/>
                                             <p>Photo by <a v-bind:href="photo.user.links.html">{{photo.user.first_name}}</a></p>
@@ -119,11 +125,23 @@
                                 <div v-if="heroImage != null" id="hero-small">
                                     <img :src="heroImage.link"/>
                                     <p>Photo by <a v-bind:href="heroImage.users_profile">{{heroImage.users_name}}</a></p>
-                                    <a v-if="heroImage != null" v-bind:href="heroImage.download">Download Image</a>
-                                </div>
-                                    <input type="file" id="fileUpload" @change="onFileChange">
+                                    <span class="fa-stack fa">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <strong class="fa-stack-1x text-primary">2</strong>
+                                    </span>
+                                    
+                                    <a v-if="heroImage != null" v-bind:href="heroImage.download" v-on:click="showDownload = true">Download Image</a>
+                                    <p v-if="!dismiss_image_note">Note: If want to add image to wordpress, you must download it, then choose the file. With Medium, there is no need to download. <span v-on:click="dismiss_image_note = true" class="clickable-span">dismiss</span></p>
 
-                                
+                                    <div v-if="showDownload" class="elbow-room">
+                                        <span  class="fa-stack fa">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <strong class="fa-stack-1x text-primary">3</strong>
+                                        </span>
+                                        <input type="file" id="fileUpload" @change="onFileChange">
+                                    </div>
+                                </div>
+
                             </div>
 
                             <!-- Decide which to publish to -->
@@ -131,7 +149,7 @@
                                 <h4>Select Sites to Publish To</h4>
                                 
                                 <div v-if="!notLoggedIntoWordpress">
-                                    <input type="checkbox" name="wordpress" value="true" v-model="postForm.publish_to_wp"><label>Wordpress</label><br>
+                                    <input type="checkbox" name="wordpress" id="wp" value="true" v-model="postForm.publish_to_wp"><label for="wp">Wordpress</label><br>
                                     <div v-if="!notLoggedIntoWordpress && postForm.publish_to_wp">
                                         <h5>Select blog to write on.</h5>
                                         <button v-if="!wp_sites" v-on:click="get_users_sites">Get Sites</button>
@@ -187,6 +205,16 @@
 
                         <div>
                             <h4>Can I do that.</h4>
+                            <p>maybe.</p>
+                        </div>
+
+                        <div>
+                            <h4>How to add image to a Wordpress post</h4>
+                            <p>maybe.</p>
+                        </div>
+
+                        <div>
+                            <h4>How to add an image to Medium post</h4>
                             <p>maybe.</p>
                         </div>
                     </div>
@@ -257,7 +285,9 @@
                     wp_url:null,
                     m_url:null
                 },
-                show_faq:false
+                show_faq:false,
+                showDownload:false,
+                dismiss_image_note:false
             },
             methods:{
                 mediumAuth:function(){

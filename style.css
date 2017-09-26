@@ -48,6 +48,19 @@ h1.logo-font:hover{
 #publish-panel h4{
     font-weight: 500;
 }
+#publish-panel .fa-stack{
+    color: #3a3a3a;
+        position: absolute;
+    left: -2em;
+}
+#publish-panel .fa-stack-2x{
+    font-size: 24px;
+}
+#publish-panel .text-primary{
+    color: white;
+    font-size: 12px;
+    margin-top: -3px;
+}
 
 #blog-form{
 	width: 18em;
@@ -58,10 +71,20 @@ h1.logo-font:hover{
     width: 100%;
     padding: 10px;
     margin: 2px;
+    border-radius: 2px;
 }
 
 #blog-form textarea{
 	resize:vertical;
+}
+
+.clickable-span{
+    cursor: pointer;
+    font-style: italic;
+    color: green;
+}
+.clickable-span:hover{
+    color: red;
 }
 
 input[type=text]{
@@ -69,6 +92,13 @@ input[type=text]{
     padding: 8px;
     width: 100%;
     margin: 6px 0 6px;
+    border-radius: 2px;
+    border: 1px solid #e1e1e1;
+}
+input[type=text]:focus{
+    /*outline: 1px solid rgba(143, 28, 236, .5);*/
+    outline: 0;
+    /*border: 1px solid purple;*/
 }
 label{
     font-size: 13px;
@@ -181,6 +211,7 @@ label{
     background-color: white;
     /*height: 80%;*/
     margin-bottom: 10em;
+    border-radius: 2px;
 }
 #editor:focus{
     outline: none !important;
@@ -374,8 +405,12 @@ h5{
     text-align: center;
     padding: 3em;
 }
+#spp-inner h2{
+    color: white;
+}
 #hero-small img{
     width: 100%;
+    margin-top: 5px;
 }
 #hero-small p{
     font-size: 10px;
