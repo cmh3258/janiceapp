@@ -21,29 +21,29 @@
         <h1 class="logo-font">JaniceWrite</h1>
 
         <div class="toolbar">
-            <a href="#" data-command='bold'><i class='fa fa-bold'></i></a>
-            <a href="#" data-command='italic'><i class='fa fa-italic'></i></a>
-            <a href="#" data-command='underline'><i class='fa fa-underline'></i></a>
-            <a href="#" data-command='insertUnorderedList'><i class='fa fa-list-ul'></i></a>
-            <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
-            <a href="#" data-command='h1'>H1</a>
-            <a href="#" data-command='h2'>H2</a>
-            <a href="#" data-command='p'>P</a>
-            <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
-            <a href="#" data-command='blockquote'><i class='fa fa-quote-left'></i></a>
+            <div id="toolbar-main">
+                <a href="#" data-command='bold'><i class='fa fa-bold'></i></a>
+                <a href="#" data-command='italic'><i class='fa fa-italic'></i></a>
+                <a href="#" data-command='underline'><i class='fa fa-underline'></i></a>
+                <a href="#" data-command='insertUnorderedList'><i class='fa fa-list-ul'></i></a>
+                <a href="#" data-command='insertOrderedList'><i class='fa fa-list-ol'></i></a>
+                <a href="#" data-command='h1'>H1</a>
+                <a href="#" data-command='h2'>H2</a>
+                <a href="#" data-command='p'>P</a>
+                <a href="#" data-command='createlink'><i class='fa fa-link'></i></a>
+                <a href="#" data-command='blockquote'><i class='fa fa-quote-left'></i></a>
+            </div>
         </div>
 
 
-        
-
-
         <div id="app">
+            
 
             <div id="alert-box" v-bind:class="{'success-alert':alertStatus.isSuccess, 'error-alert':!alertStatus.isSuccess}" v-if="alertStatus.showAlert">
                 <div>
                     <h3>Success</h3>
-                    <a href="">View WP Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
-                    <a href="">View Medium Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <a v-if="alertStatus.wp_url" v-bind:href="alertStatus.wp_url">View WP Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <a v-if="alertStatus.m_url" v-bind:href="alertStatus.m_url">View Medium Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
                     <span v-on:click="alertStatus.showAlert = false"><i class="fa fa-times" aria-hidden="true"></i></span>
                 </div>
             </div>
@@ -173,6 +173,33 @@
                     </div>
                 </div>
             </div>
+
+            <div v-if="show_faq" class="module-background">
+                <div class="module">
+                    <span class="close-module" v-on:click="show_faq = false"><i class="fa fa-times" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>FAQ</h3>
+
+                        <div>
+                            <h4>Can I do this.</h4>
+                            <p>no.</p>
+                        </div>
+
+                        <div>
+                            <h4>Can I do that.</h4>
+                            <p>maybe.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="toolbar-nav">
+                <span v-on:click="show_faq = true">FAQ</span>
+                <span><a href="mailto:chrismhume@gmail.com">CONTACT</a></span>
+            </div>
+
+            
+
         </div>
     </body>
 
@@ -225,9 +252,12 @@
                 showdashboard: false,
                 is_placeholder:true,
                 alertStatus:{
-                    showAlert:true,
-                    isSuccess:false
-                }
+                    showAlert:false,
+                    isSuccess:false,
+                    wp_url:null,
+                    m_url:null
+                },
+                show_faq:false
             },
             methods:{
                 mediumAuth:function(){
@@ -393,22 +423,21 @@
                         console.log('POST a new post response?', response);
                         if (response.status == 200){
                             //this was a success
-                            response.data.URL;
+                            
+                            vue.alertStatus.showAlert = true;
+                            vue.alertStatus.isSuccess = true;
+                            vue.alertStatus.wp_url = response.data.URL;
+                            vue.alertStatus.m_url = null;
                         }
                         else{
                             //display the error
+                            alert("Error pushing the Post:" + JSON.stringify(response.text))
                         }
                     })
                     .catch(function(error){
                         console.log('POST a new post error:', error);
+                        alert('POST a new post error:' + JSON.stringify(error))
                     });
-                },
-                upload_image_to_wp: function(){
-                    // curl \
-                    //  -H 'authorization: Bearer YOUR_API_TOKEN' \
-                    //  --data-urlencode 'media_urls=https://s.w.org/about/images/logos/codeispoetry-rgb.png' \
-                    //  'https://public-api.wordpress.com/rest/v1.1/sites/82974409/media/new'
-
                 },
                 get_users_sites(){
                     var ac = window.localStorage.getItem("access_token");
@@ -437,11 +466,11 @@
                             window.localStorage.setItem('wp_sites', JSON.stringify(wp_sites));
                         }
                         else{
-                            alert('ERROR with getting sites.')
+                            alert('ERROR with getting sites.' + JSON.stringify(response.text))
                         }
                     })
                     .catch(function(error){
-                        alert(JSON.stringify(error));
+                        alert("Error get_users_sites:" + JSON.stringify(error));
                     })
 
                 },

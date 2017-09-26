@@ -247,14 +247,43 @@ label{
 
 .toolbar{
     padding:10px;
-    border: 2px solid #ececec;
-    border-radius: 12px;
     /*width: 28em;*/
     position: absolute;
     left: 2em;
     top: 10em;
     text-align: center;
 }
+#toolbar-main{
+    border: 2px solid #ececec;
+    border-radius: 12px;
+    width: 4em;
+}
+#toolbar-nav{
+    position: absolute;
+    bottom: 2em;
+    left: 3em;
+    margin-top: 2em;
+    text-align: left;
+}
+#toolbar-nav span,
+#toolbar-nav span a{
+    cursor: pointer;
+    /*margin-left: 1em;*/
+    color: #e1e1e1;
+    transition: color .1s linear;
+    display: block;
+    padding: 0;
+    font-family: Hind;
+    font-size: 14px;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+#toolbar-nav span:hover,
+#toolbar-nav span a:hover{
+    color: #4a4a4a;
+}
+
 .toolbar a{
     font-size: 22px;
     color: #ececec;
@@ -424,5 +453,42 @@ h5{
 #alert-box > div span:hover{
     color: white;
 }
+
+.module-background{
+    background-color: rgba(76, 73, 73, 0.3);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+.module{
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: white;
+    top: 5em;
+    text-align: center;
+    width: 600px;
+    margin: 0 auto;
+}
+.module > div{
+    padding: 2em 4em;
+    text-align: left;
+    box-shadow: 0px 0px 16px -3px rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+}
+.close-module{
+    position: absolute;
+    right: 1em;
+    top: 10px;
+    transition: color .1s linear;
+    cursor: pointer;
+}
+.close-module:hover{
+    color:red;
+}
+
+
 
 
