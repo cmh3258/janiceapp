@@ -373,3 +373,56 @@ h5{
     padding-top: 1em;
     padding-bottom: 1em;
 }
+
+#alert-box{
+    position: absolute;
+    text-align: center;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    width: 40em;
+    border-radius: 5px;
+    background-color: gray;
+    margin-top:12px;
+}
+
+#alert-box.success-alert{
+    background-color: #5ae284;
+}
+#alert-box.error-alert{
+    background-color: #e25a80;
+}
+
+#alert-box > div{
+    text-align: left;
+    padding: 14px;
+}
+#alert-box > div h3{
+    margin: 0;
+    display: inline;
+    font-size: 16px
+}
+#alert-box > div a{
+    /*margin-left: 35px;*/
+    font-size: 14px;
+    color: #3a3a3a;
+    float: right;
+    margin-right: 2em;
+    transition: color .1s linear;
+}
+#alert-box > div a:hover{
+    color: #e1e1e1;
+}
+
+#alert-box > div span{
+    margin-top: 2px;
+    cursor: pointer;
+    position: absolute;
+    right: 1em;
+    transition: color .1s linear;
+}
+#alert-box > div span:hover{
+    color: white;
+}
+
+

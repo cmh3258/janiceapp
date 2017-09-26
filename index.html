@@ -39,6 +39,15 @@
 
         <div id="app">
 
+            <div id="alert-box" v-bind:class="{'success-alert':alertStatus.isSuccess, 'error-alert':!alertStatus.isSuccess}" v-if="alertStatus.showAlert">
+                <div>
+                    <h3>Success</h3>
+                    <a href="">View WP Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <a href="">View Medium Post <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <span v-on:click="alertStatus.showAlert = false"><i class="fa fa-times" aria-hidden="true"></i></span>
+                </div>
+            </div>
+
             <div class="main-content">
                 <div class="contain-writer">
                     <input id="blog_title" type="text" v-model="postForm.title" placeholder="Title" />
@@ -214,7 +223,11 @@
                 photoSearchWord: null,
                 heroImage: null,
                 showdashboard: false,
-                is_placeholder:true
+                is_placeholder:true,
+                alertStatus:{
+                    showAlert:true,
+                    isSuccess:false
+                }
             },
             methods:{
                 mediumAuth:function(){
@@ -354,11 +367,7 @@
                         else{
                             vue.upload_post_to_wp(null, tags);
                         }
-
-                        
-
                     }
-                    
                 },
                 upload_post_to_wp: function(featured_image, tags){
                     var vue = this;
