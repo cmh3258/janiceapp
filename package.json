@@ -1,0 +1,21 @@
+{
+  "name": "janiceapp",
+  "version": "1.0.0",
+  "description": "simple blog publishing",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmh3258/janiceapp.git"
+  },
+  "author": "chris hume",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmh3258/janiceapp/issues"
+  },
+  "homepage": "https://github.com/cmh3258/janiceapp#readme"
+}
