@@ -1,14 +1,12 @@
-var http = require('http');
-var fs = require('fs');
+var express = require('express'),
+    app = express(),
+    port = process.env.PORT || 3000,
+    path = require('path');
 
-var server = http.createServer(function(req, res) {
-  	res.writeHead(200);
-  	var file = fs.createReadStream('index.html');
-  	file.pipe(res);
-  	// res.end('Hello Http');
+app.use('/public', express.static('public'));
+app.use('/', function (req, res) {
+    res.sendfile(path.join(__dirname + '/index.html'));
 });
-server.listen(8080);
+app.listen(port);
 
-// app.get('/', function(req, res) {
-//     res.sendFile(path.join(__dirname + '/index.html'));
-// });
+console.log('Server started at http://localhost:%s/', port);
