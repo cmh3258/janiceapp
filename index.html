@@ -146,7 +146,9 @@
 
                             <!-- Decide which to publish to -->
                             <div class="elbow-room">
-                                <h4>Select Sites to Publish To</h4>
+                                <h4 v-if="!notLoggedIntoWordpress || !notLoggedIntoMedium">Select Sites to Publish To</h4>
+
+                                <h4 v-if="notLoggedIntoWordpress && notLoggedIntoMedium">Must be logged into Wordpress or Medium</h4>
                                 
                                 <div v-if="!notLoggedIntoWordpress">
                                     <input type="checkbox" name="wordpress" id="wp" value="true" v-model="postForm.publish_to_wp"><label for="wp">Wordpress</label><br>
