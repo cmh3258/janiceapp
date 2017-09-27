@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,5 @@
   "homepage": "https://github.com/cmh3258/janiceapp#readme",
   "engines": {
     "node": ">=4.5"
-  },
-  "scripts": {
-    "start": "node app.js"
   }
 }
