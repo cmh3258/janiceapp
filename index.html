@@ -291,7 +291,7 @@
             },
             methods:{
                 mediumAuth:function(){
-                    window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=http://localhost:8000/";
+                    window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=http://www.pondersimple.com";
                 },
                 onFileChange(e) {
                     var files = e.target.files || e.dataTransfer.files;
@@ -468,6 +468,23 @@
                         console.log('POST a new post error:', error);
                         alert('POST a new post error:' + JSON.stringify(error))
                     });
+                },
+                upload_post_to_medium(){
+                    // POST /v1/users/5303d74c64f66366f00cb9b2a94f3251bf5/posts HTTP/1.1
+                    // Host: api.medium.com
+                    // Authorization: Bearer 181d415f34379af07b2c11d144dfbe35d
+                    // Content-Type: application/json
+                    // Accept: application/json
+                    // Accept-Charset: utf-8
+
+                    // {
+                    //   "title": "Liverpool FC",
+                    //   "contentFormat": "html",
+                    //   "content": "<h1>Liverpool FC</h1><p>You’ll never walk alone.</p>",
+                    //   "canonicalUrl": "http://jamietalbot.com/posts/liverpool-fc",
+                    //   "tags": ["football", "sport", "Liverpool"],
+                    //   "publishStatus": "public"
+                    // }
                 },
                 get_users_sites(){
                     var ac = window.localStorage.getItem("access_token");
@@ -656,41 +673,91 @@
                         }   
                     }
                     
+
+                    // window.localStorage.removeItem("medium_token")
+
                     //check for Medium token
                     if(myStorage.getItem("medium_token") !== null){
                         console.log('you have a medium_token.');
                         // const vue = this;
                         vue.notLoggedIntoMedium = false;
+                        vue.get_medium_user();
                     }
                     else if(window.location.href.indexOf('code=') > -1 && window.location.href.indexOf('state=') > -1){
                         var info = window.location.href;
                         code = info.substring(info.indexOf('code=')+5,)
 
                         //now make api call to set the long period auth
-                        var url = "https://api.medium.com//v1/tokens?code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
+                        // var url = "https://api.medium.com/v1/tokens?code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
+                        var url = "https://api.medium.com/v1/tokens"
+
+                        var data = "code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
 
                         axios({
                             method: 'post',
                             url: url,
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded",
-                                "Accept": "application/json",
-                                "Accept-Charset": "utf-8"
-                            }
+                                "Accept": "application/json"
+                            },
+                            data:data
                         })
                         .then(function(response) {
                             console.log('medium token?', response);
                             
                             //now set the token to localstorage
-                            // myStorage.setItem('medium_token', medium_token);
+                            myStorage.setItem('medium_token', response.data.access_token); //60 days
+                            myStorage.setItem('medium_token_refresh', response.data.refresh_token); //use to update access token
+
+                            vue.notLoggedIntoMedium = false;
+
+                            vue.get_medium_user();
 
                         })
                         .catch(function(error){
                             console.log('medium token, error:', error);
                         });
                     }
+                },
+                get_medium_user:function(){
+                // GET /v1/me HTTP/1.1
+                // Host: api.medium.com
+                // Authorization: Bearer 181d415f34379af07b2c11d144dfbe35d
+                // Content-Type: application/json
+                // Accept: application/json
+                // Accept-Charset: utf-8
+
+                    var c = "Bearer " + window.localStorage.getItem("medium_token");
+                    console.log("token->", window.localStorage.getItem("medium_token"));
+
+                    axios({
+                        method: 'get',
+                        url: "https://api.medium.com/v1/me",
+                        headers: { //must send from the correct url?
+                            "Content-Type": "application/json; charset=utf-8",
+                            "Accept": "application/json",
+                            "Authorization": "Bearer " + window.localStorage.getItem("medium_token")
+                            // "HOST": "api.medium.com"
+                        }
+                    })
+                    .then(function(response) {
+                        console.log('medium user?', response);
+
+                        //set the medium user information
+                        window.localStorage.setItem("medium_user_info", JSON.stringify(response.data));
+                        
+                        //id, imageUrl
+
+                        
+                    })
+                    .catch(function(error){
+                        console.log('medium user, error:', error);
+                    });
+
+
                 }
-            },
+            }
+            
             // created: function(){}
         })
         app.check_url();
