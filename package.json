@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/cmh3258/janiceapp/issues"
   },
-  "homepage": "https://github.com/cmh3258/janiceapp#readme"
+  "homepage": "https://github.com/cmh3258/janiceapp#readme",
+  "engines": {
+    "node": "5.3.0"
+  }
 }
