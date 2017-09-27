@@ -2,8 +2,10 @@
   "name": "janiceapp",
   "version": "1.0.0",
   "description": "simple blog publishing",
-  "main": "index.js",
-  "dependencies": {},
+  "main": "app.js",
+  "dependencies": {
+    "require": "^2.4.20"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
