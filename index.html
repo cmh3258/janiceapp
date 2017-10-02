@@ -302,7 +302,7 @@
                     }
                 },
                 mediumAuth:function(){
-                    window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=http://www.pondersimple.com";
+                    window.location.href = "https://medium.com/m/oauth/authorize?client_id=1292420447db&scope=basicProfile,publishPost&state=janiceapp&response_type=code&redirect_uri=https://janiceapp.herokuapp.com/";
                 },
                 onFileChange(e) {
                     var files = e.target.files || e.dataTransfer.files;
@@ -744,7 +744,7 @@
                         // var url = "https://api.medium.com/v1/tokens?code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
                         var url = "https://api.medium.com/v1/tokens"
 
-                        var data = "code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=http://www.pondersimple.com"
+                        var data = "code=" + code + "&client_id=1292420447db&client_secret=7b1d0c1d9a1ef5af7ad3cad5629c3956e6511724&grant_type=authorization_code&redirect_uri=https://janiceapp.herokuapp.com/"
 
                         axios({
                             method: 'post',
