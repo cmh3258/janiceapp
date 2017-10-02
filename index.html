@@ -687,7 +687,9 @@
                         vue.notLoggedIntoWordpress = false;
 
                         //get user information and store into localstorage
-                        var url = 'https://public-api.wordpress.com/rest/v1.1/me/'
+                        
+
+                        // var url = 'https://public-api.wordpress.com/rest/v1.1/me/'
                         axios({
                             method: 'get',
                             url: url,
@@ -727,9 +729,10 @@
                     }
                     
 
-                    // window.localStorage.removeItem("medium_token")
+                    // window.localStorage.removeItem("medium_token");
 
                     //check for Medium token
+                    console.log('h_.', myStorage.getItem("medium_token"));
                     if(myStorage.getItem("medium_token") !== null){
                         console.log('you have a medium_token.');
                         // const vue = this;
@@ -773,35 +776,41 @@
                     }
                 },
                 get_medium_user:function(){
-                // GET /v1/me HTTP/1.1
-                // Host: api.medium.com
-                // Authorization: Bearer 181d415f34379af07b2c11d144dfbe35d
-                // Content-Type: application/json
-                // Accept: application/json
-                // Accept-Charset: utf-8
+                    // GET /v1/me HTTP/1.1
+                    // Host: api.medium.com
+                    // Authorization: Bearer 181d415f34379af07b2c11d144dfbe35d
+                    // Content-Type: application/json
+                    // Accept: application/json
+                    // Accept-Charset: utf-8
 
-                    var c = "Bearer " + window.localStorage.getItem("medium_token");
-                    console.log("token->", window.localStorage.getItem("medium_token"));
+                    // console.log('MM.');
+                    // axios.post('http://localhost:5000/mediumAPI/v1', "smeegly").then((response) => {
+                    //     console.log("RR:", response);
+                    // })
+
+                    // var c = "Bearer " + window.localStorage.getItem("medium_token");
+                    // console.log("token->", window.localStorage.getItem("medium_token"));
 
                     axios({
-                        method: 'get',
-                        url: "https://api.medium.com/v1/me",
-                        headers: { //must send from the correct url?
-                            "Content-Type": "application/json; charset=utf-8",
-                            "Accept": "application/json",
-                            "Authorization": "Bearer " + window.localStorage.getItem("medium_token")
-                            // "HOST": "api.medium.com"
-                        }
+                        method: 'post',
+                        url: 'http://localhost:5000/mediumAPIv1', //https://api.medium.com/v1/me",
+                        // headers: { //must send from the correct url?
+                        //     // "Content-Type": "application/json; charset=utf-8",
+                        //     // "Accept": "application/json",
+                        //     "Authorization": "Bearer " + window.localStorage.getItem("medium_token")
+                        //     // "HOST": "api.medium.com"
+                        // }
+                        data:{auth:"Bearer " + window.localStorage.getItem("medium_token")}
                     })
                     .then(function(response) {
-                        console.log('medium user?', response);
-
-                        //set the medium user information
-                        window.localStorage.setItem("medium_user_info", JSON.stringify(response.data));
-                        
-                        //id, imageUrl
-
-                        
+                        try{
+                            console.log('appjs route testing:', response.data.data);
+                            //set the medium user information
+                            window.localStorage.setItem("medium_user_info", JSON.stringify(response.data.data));
+                        }
+                        catch(err){
+                            alert("Error getting profile info:" + JSON.stringify(err));
+                        }
                     })
                     .catch(function(error){
                         console.log('medium user, error:', error);

@@ -4,6 +4,7 @@
   "description": "simple blog publishing",
   "main": "app.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.15.5",
     "fs": "0.0.1-security",
     "require": "^2.4.20"
