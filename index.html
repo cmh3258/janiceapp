@@ -525,7 +525,7 @@
                     var MUI = JSON.parse(window.localStorage.getItem("medium_user_info"));
                     axios({
                         method: 'post',
-                        url: 'https://api.medium.com/v1/users/' + MUI.ID + '/posts/',
+                        url: 'https://api.medium.com/v1/users/' + MUI.id + '/posts/',
                         data:data,
                         headers: {
                             'content-type': 'application/json',
