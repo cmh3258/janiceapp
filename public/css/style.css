@@ -489,13 +489,16 @@ h5{
     color: white;
 }
 
-.module-background{
+#module-background{
     background-color: rgba(76, 73, 73, 0.3);
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
+}
+[v-cloak] {
+    display: none;
 }
 .module{
     position: absolute;
